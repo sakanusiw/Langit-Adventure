@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/home"
+        android:title="Beranda"
+        android:icon="@drawable/home_gray"/>
+    <item
+        android:id="@+id/basket"
+        android:title="Keranjang"
+        android:icon="@drawable/basket_gray"/>
+    <item
+        android:id="@+id/order"
+        android:title="Pesanan"
+        android:icon="@drawable/order_gray"/>
+    <item
+        android:id="@+id/profile"
+        android:title="Profil"
+        android:icon="@drawable/profile_gray"/>
+
+</menu>
