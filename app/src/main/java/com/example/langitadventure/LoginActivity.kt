@@ -45,7 +45,7 @@ class LoginActivity : AppCompatActivity() {
 
         val buttonClick = findViewById<Button>(R.id.buttonMasuk)
         buttonClick.setOnClickListener {
-            val intent = Intent(this, HomeActivity::class.java)
+            val intent = Intent(this, BasketActivity::class.java)
             startActivity(intent)
         }
 

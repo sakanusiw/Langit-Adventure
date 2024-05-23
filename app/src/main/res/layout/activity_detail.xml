@@ -190,7 +190,7 @@
             </LinearLayout>
 
             <Button
-                android:id="@+id/ButtonDetailKeranjang"
+                android:id="@+id/buttonDetailKeranjang"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end|center_vertical"

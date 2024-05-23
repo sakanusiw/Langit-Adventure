@@ -80,6 +80,7 @@
             android:text="Total: Rp210.000"/>
 
         <Button
+            android:id="@+id/buttonBayar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"

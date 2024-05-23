@@ -2,6 +2,7 @@ package com.example.langitadventure
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
 import android.widget.ImageButton
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -29,6 +30,12 @@ class DetailActivity : AppCompatActivity() {
         val buttonClick1 = findViewById<ImageButton>(R.id.imageButtonBasket)
         buttonClick1.setOnClickListener {
             val intent = Intent(this, BasketActivity::class.java)
+            startActivity(intent)
+        }
+
+        val buttonClick2 = findViewById<Button>(R.id.buttonDetailKeranjang)
+        buttonClick2.setOnClickListener {
+            val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
         }
     }
