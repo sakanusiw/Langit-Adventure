@@ -5,6 +5,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.langitadventure.RecyclerView.OrderAdapter
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -35,6 +38,28 @@ class OrderFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_order, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        // getting the recyclerview by its id
+        val recyclerview = view.findViewById<RecyclerView>(R.id.recyclerViewOrder)
+
+        // this creates a vertical layout Manager
+        recyclerview.layoutManager = LinearLayoutManager(requireContext())
+
+        // ArrayList of class ItemsViewModelBasket
+        val data = ArrayList<ItemsViewModelOrder>()
+
+        data.add(ItemsViewModelOrder(R.drawable.tenda_dome_nsm4,"Tenda Dome NSM4","Rp35.000/Malam","x2 Malam","Sedang Disewa","x1 Barang","Total Biaya: Rp70.000"))
+        data.add(ItemsViewModelOrder(R.drawable.tenda_dome_nsm4,"Tenda Dome NSM4","Rp35.000/Malam","x2 Malam","Sedang Disewa","x1 Barang","Total Biaya: Rp70.000"))
+        data.add(ItemsViewModelOrder(R.drawable.tenda_dome_nsm4,"Tenda Dome NSM4","Rp35.000/Malam","x2 Malam","Sedang Disewa","x1 Barang","Total Biaya: Rp70.000"))
+        // This will pass the ArrayList to our Adapter
+        val adapter = OrderAdapter(data)
+
+        // Setting the Adapter with the recyclerview
+        recyclerview.adapter = adapter
     }
 
     companion object {
