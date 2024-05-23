@@ -1,5 +1,6 @@
 package com.example.langitadventure
 
+import BasketAdapter
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.style.UnderlineSpan
@@ -8,6 +9,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.langitadventure.RecyclerView.CategoryAdapter
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -23,6 +27,10 @@ class BasketFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var adapter: BasketAdapter
+    private lateinit var itemList: List<ItemsViewModelBasket>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,6 +53,7 @@ class BasketFragment : Fragment() {
 
         // Declaring and initializing the TextView from layout
         val mTextView = view.findViewById<TextView>(R.id.textViewTotal)
+//        val mTextView1 = view.findViewById<TextView>(R.id.textViewCardKeranjangTotal)
 
         // Declaring a string
         val mString = "Total: Rp210.000"
@@ -57,6 +66,27 @@ class BasketFragment : Fragment() {
 
         // Displaying this spannable string in TextView
         mTextView.text = mSpannableString
+//        mTextView1.text = mSpannableString
+
+        //BasketRecyclerView
+
+        // getting the recyclerview by its id
+        val recyclerview = view.findViewById<RecyclerView>(R.id.recyclerViewBasket)
+
+        // this creates a vertical layout Manager
+        recyclerview.layoutManager = LinearLayoutManager(requireContext())
+
+        // ArrayList of class ItemsViewModelBasket
+        val data = ArrayList<ItemsViewModelBasket>()
+
+        data.add(ItemsViewModelBasket("Tenda Dome NSM 4", "06/03/2024 - 08/03/2024", "Durasi: 2 Malam", 1, "Total Biaya: Rp70.000", R.drawable.tenda_dome_nsm4 ))
+        data.add(ItemsViewModelBasket("Tenda Dome NSM 4", "06/03/2024 - 08/03/2024", "Durasi: 2 Malam", 1, "Total Biaya: Rp70.000", R.drawable.tenda_dome_nsm4 ))
+        data.add(ItemsViewModelBasket("Tenda Dome NSM 4", "06/03/2024 - 08/03/2024", "Durasi: 2 Malam", 1, "Total Biaya: Rp70.000", R.drawable.tenda_dome_nsm4 ))
+        // This will pass the ArrayList to our Adapter
+        val adapter = BasketAdapter(data)
+
+        // Setting the Adapter with the recyclerview
+        recyclerview.adapter = adapter
     }
 
     companion object {
