@@ -1,6 +1,5 @@
 package com.example.langitadventure
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -11,12 +10,11 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
-class BasketActivity : AppCompatActivity() {
-
+class OrderActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_basket)
+        setContentView(R.layout.activity_order)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -26,7 +24,7 @@ class BasketActivity : AppCompatActivity() {
         // Load Basket Fragment
         val fragmentManager: FragmentManager = supportFragmentManager
         val fragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction()
-        fragmentTransaction.replace(R.id.fragment_container, BasketFragment())
+        fragmentTransaction.replace(R.id.fragment_container, OrderFragment())
         fragmentTransaction.commit()
 
         val homeFragment=HomeFragment()
@@ -34,10 +32,10 @@ class BasketActivity : AppCompatActivity() {
         val orderFragment=OrderFragment()
         val profileFragment=ProfileFragment()
 
-        setCurrentFragment(basketFragment)
+        setCurrentFragment(orderFragment)
 
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
-        bottomNavigationView.selectedItemId = R.id.basket
+        bottomNavigationView.selectedItemId = R.id.order
         bottomNavigationView.setOnNavigationItemSelectedListener {
             when(it.itemId){
                 R.id.home->setCurrentFragment(homeFragment)
