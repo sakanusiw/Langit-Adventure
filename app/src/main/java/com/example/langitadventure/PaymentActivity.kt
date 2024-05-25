@@ -45,7 +45,7 @@ class PaymentActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        val buttonClick1 = findViewById<Button>(R.id.buttonKirim)
+        val buttonClick1 = findViewById<Button>(R.id.buttonPaymentKirim)
         buttonClick1.setOnClickListener {
             val intent = Intent(this, PaymentSentActivity::class.java)
             startActivity(intent)
