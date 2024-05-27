@@ -4,12 +4,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
     <ImageView
         android:id="@+id/imageViewLogo"
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:scaleType="centerCrop"
-        android:layout_marginTop="200dp"
+        android:layout_gravity="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -19,30 +28,23 @@
         android:id="@+id/textViewNamaPerusahaan"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
-        android:layout_below="@id/imageViewLogo"
+        android:layout_gravity="center"
         android:text="Langit Adventure"
         android:textSize="40sp"
         android:textColor="@color/black"
-        android:fontFamily="@font/sansation_bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageViewLogo" />
+        android:fontFamily="@font/sansation_bold"/>
 
     <TextView
         android:id="@+id/textViewTagline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
         android:layout_marginTop="4dp"
-        android:layout_below="@id/textViewNamaPerusahaan"
+        android:layout_gravity="center"
         android:text="Jelajahi Dunia Impianmu"
         android:textSize="20sp"
         android:textColor="@color/black"
-        android:fontFamily="@font/sansation_regular"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewNamaPerusahaan" />
+        android:fontFamily="@font/sansation_regular"/>
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

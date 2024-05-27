@@ -37,56 +37,61 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/linearLayoutProfileContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginHorizontal="25dp"
+        android:paddingVertical="15dp"
+        android:paddingHorizontal="10dp"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayoutTopBarProfile"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:elevation="10dp"
+        android:background="@drawable/oval">
+
+        <ImageView
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_gravity="center"
+            android:background="@drawable/profile_picture"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingVertical="50dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:textSize="18sp"
+                android:fontFamily="@font/sansation_bold"
+                android:text="Zack Muckerberg"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:fontFamily="@font/sansation_regular"
+                android:text="zack.muckerberg@gmail.com"/>
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/linearLayoutProfileMenu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:layout_marginTop="20dp"
         android:paddingHorizontal="25dp"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayoutTopBarProfile"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayoutProfileContainer"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
-
-        <LinearLayout
-            android:id="@+id/linearLayoutProfileContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="20dp"
-            android:paddingVertical="15dp"
-            android:paddingHorizontal="10dp"
-            android:elevation="10dp"
-            android:background="@drawable/oval">
-
-            <ImageView
-                android:layout_width="120dp"
-                android:layout_height="120dp"
-                android:layout_gravity="center"
-                android:background="@drawable/profile_picture"/>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingVertical="50dp">
-                
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="5dp"
-                    android:textSize="18sp"
-                    android:fontFamily="@font/sansation_bold"
-                    android:text="Zack Muckerberg"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="14sp"
-                    android:fontFamily="@font/sansation_regular"
-                    android:text="zack.muckerberg@gmail.com"/>
-
-            </LinearLayout>
-        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -198,19 +203,23 @@
 
             </FrameLayout>
         </LinearLayout>
-        
-        <Button
-            android:id="@+id/buttonKeluar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:paddingVertical="10dp"
-            android:paddingHorizontal="15dp"
-            android:backgroundTint="@color/mainred"
-            android:fontFamily="@font/sansation_bold"
-            android:textSize="20sp"
-            android:text="KELUAR"/>
 
     </LinearLayout>
+
+    <Button
+        android:id="@+id/buttonKeluar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginHorizontal="25dp"
+        android:paddingVertical="10dp"
+        android:paddingHorizontal="15dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:backgroundTint="@color/mainred"
+        android:fontFamily="@font/sansation_bold"
+        android:textSize="20sp"
+        android:text="KELUAR"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
