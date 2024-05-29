@@ -3,10 +3,21 @@ package com.example.langitadventure
 import android.widget.ImageView
 
 data class ItemsViewModelBasket(
-    val itemName: String,
-    val rentDate: String,
-    val duration: String,
-    val quantity: Int,
-    val totalPrice: String,
-    val imageResource: Int
-)
+    var itemName: String,
+    var rentDate: String,
+    var duration: String,
+    var quantity: Int,
+    var totalPrice: String,
+    var imageResource: Int
+) {
+    fun incrementQuantity() {
+        quantity++
+    }
+
+    fun decrementQuantity() {
+        if (quantity > 1) {
+            quantity--
+        }
+    }
+
+}

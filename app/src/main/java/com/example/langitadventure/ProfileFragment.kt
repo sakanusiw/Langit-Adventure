@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageButton
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
@@ -35,6 +36,13 @@ class ProfileFragment : Fragment() {
         buttonClick.setOnClickListener {
             // Menggunakan requireActivity() sebagai konteks
             val intent = Intent(requireActivity(), LoginActivity::class.java)
+            startActivity(intent)
+        }
+
+        val buttonClick1 = view.findViewById<ImageButton>(R.id.imageButtonRightArrowProfile)
+        buttonClick1.setOnClickListener {
+            // Menggunakan requireActivity() sebagai konteks
+            val intent = Intent(requireActivity(), ProfileEditActivity::class.java)
             startActivity(intent)
         }
 

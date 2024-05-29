@@ -9,7 +9,7 @@ import androidx.cardview.widget.CardView
 import com.example.langitadventure.ItemsViewModelBasket
 import com.example.langitadventure.R
 
-class BasketAdapter(private val mList: List<ItemsViewModelBasket>) : RecyclerView.Adapter<BasketAdapter.ViewHolder>() {
+class BasketAdapter(private val mList: MutableList<ItemsViewModelBasket>) : RecyclerView.Adapter<BasketAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -27,18 +27,37 @@ class BasketAdapter(private val mList: List<ItemsViewModelBasket>) : RecyclerVie
         holder.totalPrice.text = ItemsViewModelBasket.totalPrice
         holder.itemImage.setImageResource(ItemsViewModelBasket.imageResource)
 
-//        holder.deleteButton.setOnClickListener {
-//            // Implementasi untuk hapus item dari keranjang
-//        }
+        holder.deleteButton.setOnClickListener {
+            // Implementasi untuk hapus item dari keranjang
+            mList.removeAt(position)
+            notifyItemRemoved(position)
+            notifyItemRangeChanged(position, mList.size)
+        }
 //
-//        holder.minusButton.setOnClickListener {
-//            // Implementasi untuk mengurangi jumlah item
-//        }
+        holder.minusButton.setOnClickListener {
+            // Implementasi untuk mengurangi jumlah item
+            ItemsViewModelBasket.decrementQuantity()
+            holder.quantity.text = ItemsViewModelBasket.quantity.toString()
+            // Optionally, update total price if it's dependent on quantity
+//             holder.totalPrice.text = calculateTotalPrice(ItemsViewModelBasket)
+            notifyItemChanged(position)
+        }
 //
-//        holder.plusButton.setOnClickListener {
-//            // Implementasi untuk menambah jumlah item
-//        }
+        holder.plusButton.setOnClickListener {
+            // Implementasi untuk menambah jumlah item
+            ItemsViewModelBasket.incrementQuantity()
+            holder.quantity.text = ItemsViewModelBasket.quantity.toString()
+            // Optionally, update total price if it's dependent on quantity
+//             holder.totalPrice.text = calculateTotalPrice(ItemsViewModelBasket)
+            notifyItemChanged(position)
+        }
     }
+
+//    private fun calculateTotalPrice(item: ItemsViewModelBasket): String {
+//        val unitPrice = 35000 // Assume each item costs 35,000
+//        val totalPrice = unitPrice * item.quantity
+//        return "Total Biaya: Rp$totalPrice"
+//    }
 
     class ViewHolder(ItemView: View) : RecyclerView.ViewHolder(ItemView) {
         val itemName: TextView = ItemView.findViewById(R.id.textViewCardKeranjangNama)
