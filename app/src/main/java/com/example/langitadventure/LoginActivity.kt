@@ -5,12 +5,19 @@ import android.os.Bundle
 import android.text.SpannableString
 import android.text.style.UnderlineSpan
 import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import okhttp3.ResponseBody
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import android.widget.Toast
+//import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,6 +29,33 @@ class LoginActivity : AppCompatActivity() {
 //            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
 //            insets
 //        }
+
+        val buttonMasuk = findViewById<Button>(R.id.buttonMasuk)
+        val editTextEmail = findViewById<EditText>(R.id.editTextEmail)
+        val editTextPassword = findViewById<EditText>(R.id.editTextPassword)
+
+        buttonMasuk.setOnClickListener {
+            val email = editTextEmail.text.toString().trim()
+            val password = editTextPassword.text.toString().trim()
+
+            val request = LoginRequest(email, password)
+            RetrofitClient.instance.login(request)
+                .enqueue(object : Callback<ResponseBody> {
+                    override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                        if (response.isSuccessful) {
+                            val intent = Intent(this@LoginActivity, HomeActivity::class.java)
+                            startActivity(intent)
+                            finish()
+                        } else {
+                            Toast.makeText(this@LoginActivity, "Login failed", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+
+                    override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                        Toast.makeText(this@LoginActivity, t.message, Toast.LENGTH_SHORT).show()
+                    }
+                })
+        }
 
         // Declaring and initializing
         // the TextView from layout
@@ -43,11 +77,11 @@ class LoginActivity : AppCompatActivity() {
         // string in TextView
         mTextView.text = mSpannableString
 
-        val buttonClick = findViewById<Button>(R.id.buttonMasuk)
-        buttonClick.setOnClickListener {
-            val intent = Intent(this, BasketActivity::class.java)
-            startActivity(intent)
-        }
+//        val buttonClick = findViewById<Button>(R.id.buttonMasuk)
+//        buttonClick.setOnClickListener {
+//            val intent = Intent(this, BasketActivity::class.java)
+//            startActivity(intent)
+//        }
 
         val buttonClick1 = findViewById<TextView>(R.id.textViewDaftar)
         buttonClick1.setOnClickListener {
