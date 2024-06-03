@@ -8,27 +8,22 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
-import androidx.activity.enableEdgeToEdge
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import okhttp3.ResponseBody
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import android.widget.Toast
-//import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity : AppCompatActivity() {
+    private lateinit var authManager: AuthManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        enableEdgeToEdge()
         setContentView(R.layout.activity_login)
-//        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-//            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-//            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-//            insets
-//        }
+
+        authManager = AuthManager(this)
 
         val buttonMasuk = findViewById<Button>(R.id.buttonMasuk)
         val editTextEmail = findViewById<EditText>(R.id.editTextEmail)
@@ -43,9 +38,20 @@ class LoginActivity : AppCompatActivity() {
                 .enqueue(object : Callback<ResponseBody> {
                     override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                         if (response.isSuccessful) {
-                            val intent = Intent(this@LoginActivity, HomeActivity::class.java)
-                            startActivity(intent)
-                            finish()
+                            val responseBody = response.body()?.string()
+                            responseBody?.let {
+                                try {
+                                    val jsonObject = JSONObject(it)
+                                    val token = jsonObject.getString("token")
+                                    authManager.saveToken(token)
+
+                                    val intent = Intent(this@LoginActivity, HomeActivity::class.java)
+                                    startActivity(intent)
+                                    finish()
+                                } catch (e: Exception) {
+                                    Toast.makeText(this@LoginActivity, "Failed to parse token", Toast.LENGTH_SHORT).show()
+                                }
+                            }
                         } else {
                             Toast.makeText(this@LoginActivity, "Login failed", Toast.LENGTH_SHORT).show()
                         }
@@ -57,31 +63,20 @@ class LoginActivity : AppCompatActivity() {
                 })
         }
 
-        // Declaring and initializing
-        // the TextView from layout
+        // Declaring and initializing the TextView from layout
         val mTextView = findViewById<TextView>(R.id.textViewLupaSandi)
 
         // Declaring a string
         val mString = "Lupa Sandi"
 
-        // Creating a Spannable String
-        // from the above string
+        // Creating a Spannable String from the above string
         val mSpannableString = SpannableString(mString)
 
-        // Setting underline style from
-        // position 0 till length of
-        // the spannable string
+        // Setting underline style from position 0 till length of the spannable string
         mSpannableString.setSpan(UnderlineSpan(), 0, mSpannableString.length, 0)
 
-        // Displaying this spannable
-        // string in TextView
+        // Displaying this spannable string in TextView
         mTextView.text = mSpannableString
-
-//        val buttonClick = findViewById<Button>(R.id.buttonMasuk)
-//        buttonClick.setOnClickListener {
-//            val intent = Intent(this, BasketActivity::class.java)
-//            startActivity(intent)
-//        }
 
         val buttonClick1 = findViewById<TextView>(R.id.textViewDaftar)
         buttonClick1.setOnClickListener {
