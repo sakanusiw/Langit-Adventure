@@ -94,10 +94,10 @@ class BasketFragment : Fragment() {
         data.add(ItemsViewModelBasket("Tenda Dome NSM 4", "06/03/2024 - 08/03/2024", "Durasi: 2 Malam", 1, "Total Biaya: Rp70.000", R.drawable.tenda_dome_nsm4 ))
         data.add(ItemsViewModelBasket("Tenda Dome NSM 4", "06/03/2024 - 08/03/2024", "Durasi: 2 Malam", 1, "Total Biaya: Rp70.000", R.drawable.tenda_dome_nsm4 ))
         data.add(ItemsViewModelBasket("Tenda Dome NSM 4", "06/03/2024 - 08/03/2024", "Durasi: 2 Malam", 1, "Total Biaya: Rp70.000", R.drawable.tenda_dome_nsm4 ))
-        data.add(ItemsViewModelBasket("Tenda Dome NSM 4", "06/03/2024 - 08/03/2024", "Durasi: 2 Malam", 1, "Total Biaya: Rp70.000", R.drawable.tenda_dome_nsm4 ))
-        data.add(ItemsViewModelBasket("Tenda Dome NSM 4", "06/03/2024 - 08/03/2024", "Durasi: 2 Malam", 1, "Total Biaya: Rp70.000", R.drawable.tenda_dome_nsm4 ))
-        data.add(ItemsViewModelBasket("Tenda Dome NSM 4", "06/03/2024 - 08/03/2024", "Durasi: 2 Malam", 1, "Total Biaya: Rp70.000", R.drawable.tenda_dome_nsm4 ))
-        data.add(ItemsViewModelBasket("Tenda Dome NSM 4", "06/03/2024 - 08/03/2024", "Durasi: 2 Malam", 1, "Total Biaya: Rp70.000", R.drawable.tenda_dome_nsm4 ))
+//        data.add(ItemsViewModelBasket("Tenda Dome NSM 4", "06/03/2024 - 08/03/2024", "Durasi: 2 Malam", 1, "Total Biaya: Rp70.000", R.drawable.tenda_dome_nsm4 ))
+//        data.add(ItemsViewModelBasket("Tenda Dome NSM 4", "06/03/2024 - 08/03/2024", "Durasi: 2 Malam", 1, "Total Biaya: Rp70.000", R.drawable.tenda_dome_nsm4 ))
+//        data.add(ItemsViewModelBasket("Tenda Dome NSM 4", "06/03/2024 - 08/03/2024", "Durasi: 2 Malam", 1, "Total Biaya: Rp70.000", R.drawable.tenda_dome_nsm4 ))
+//        data.add(ItemsViewModelBasket("Tenda Dome NSM 4", "06/03/2024 - 08/03/2024", "Durasi: 2 Malam", 1, "Total Biaya: Rp70.000", R.drawable.tenda_dome_nsm4 ))
         // This will pass the ArrayList to our Adapter
         val adapter = BasketAdapter(data)
 

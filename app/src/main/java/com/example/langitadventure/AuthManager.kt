@@ -8,6 +8,7 @@ import android.content.Intent
 import android.widget.TextView
 import android.widget.Toast
 import android.util.Log
+import android.widget.EditText
 import okhttp3.*
 import org.json.JSONObject
 import java.io.IOException
@@ -16,7 +17,7 @@ import kotlin.Exception
 class AuthManager(private val context: Context) {
 
     companion object {
-        private const val BASE_URL = "https://guiding-uniquely-piglet.ngrok-free.app/api/"
+        const val BASE_URL = "https://guiding-uniquely-piglet.ngrok-free.app/api/"
         private const val TAG = "AuthManager"
     }
 
@@ -30,7 +31,7 @@ class AuthManager(private val context: Context) {
         Log.d(TAG, "Token saved: $token")
     }
 
-    private fun getToken(): String? {
+    fun getToken(): String? {
         val token = sharedPreferences.getString("auth_token", null)
         Log.d(TAG, "Token retrieved: $token")
         return token
@@ -74,6 +75,8 @@ class AuthManager(private val context: Context) {
                                 runOnUiThread {
                                     (context as? Activity)?.findViewById<TextView>(R.id.textViewUserNameProfile)?.text = userName
                                     (context as? Activity)?.findViewById<TextView>(R.id.textViewUserEmailProfile)?.text = userEmail
+                                    (context as? Activity)?.findViewById<EditText>(R.id.editTextNamaLengkap)?.setText(userName)
+                                    (context as? Activity)?.findViewById<EditText>(R.id.editTextEmail)?.setText(userEmail)
                                 }
                             } catch (e: Exception) {
                                 Log.e(TAG, "Error parsing user profile: ${e.message}", e)

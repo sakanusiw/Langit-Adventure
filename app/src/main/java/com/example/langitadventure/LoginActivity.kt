@@ -1,5 +1,3 @@
-package com.example.langitadventure
-
 import android.content.Intent
 import android.os.Bundle
 import android.text.SpannableString
@@ -10,6 +8,12 @@ import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.langitadventure.AuthManager
+import com.example.langitadventure.HomeActivity
+import com.example.langitadventure.LoginRequest
+import com.example.langitadventure.R
+import com.example.langitadventure.RegisterActivity
+import com.example.langitadventure.RetrofitClient
 import okhttp3.ResponseBody
 import org.json.JSONObject
 import retrofit2.Call
