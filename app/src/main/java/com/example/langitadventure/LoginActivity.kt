@@ -1,3 +1,5 @@
+package com.example.langitadventure
+
 import android.content.Intent
 import android.os.Bundle
 import android.text.SpannableString
@@ -8,26 +10,20 @@ import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.langitadventure.AuthManager
 import com.example.langitadventure.HomeActivity
-import com.example.langitadventure.LoginRequest
+import com.example.langitadventure.OrderActivity
 import com.example.langitadventure.R
 import com.example.langitadventure.RegisterActivity
-import com.example.langitadventure.RetrofitClient
-import okhttp3.ResponseBody
-import org.json.JSONObject
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.google.firebase.auth.FirebaseAuth
 
 class LoginActivity : AppCompatActivity() {
-    private lateinit var authManager: AuthManager
+    private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        authManager = AuthManager(this)
+        auth = FirebaseAuth.getInstance()
 
         val buttonMasuk = findViewById<Button>(R.id.buttonMasuk)
         val editTextEmail = findViewById<EditText>(R.id.editTextEmail)
@@ -37,34 +33,27 @@ class LoginActivity : AppCompatActivity() {
             val email = editTextEmail.text.toString().trim()
             val password = editTextPassword.text.toString().trim()
 
-            val request = LoginRequest(email, password)
-            RetrofitClient.instance.login(request)
-                .enqueue(object : Callback<ResponseBody> {
-                    override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-                        if (response.isSuccessful) {
-                            val responseBody = response.body()?.string()
-                            responseBody?.let {
-                                try {
-                                    val jsonObject = JSONObject(it)
-                                    val token = jsonObject.getString("token")
-                                    authManager.saveToken(token)
-
-                                    val intent = Intent(this@LoginActivity, HomeActivity::class.java)
-                                    startActivity(intent)
-                                    finish()
-                                } catch (e: Exception) {
-                                    Toast.makeText(this@LoginActivity, "Failed to parse token", Toast.LENGTH_SHORT).show()
-                                }
-                            }
+            auth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this) { task ->
+                    if (task.isSuccessful) {
+                        val user = auth.currentUser
+                        if (user?.isEmailVerified == true) {
+                            // Email is verified, proceed to main activity
+                            val intent = Intent(this, OrderActivity::class.java)
+                            startActivity(intent)
+                            finish()
                         } else {
-                            Toast.makeText(this@LoginActivity, "Login failed", Toast.LENGTH_SHORT).show()
+                            // Email is not verified, show message
+                            Toast.makeText(this, "Please verify your email address.", Toast.LENGTH_LONG).show()
+                            auth.signOut() // Sign out the user
+                        }
+                    } else {
+                        // Login failed, show error message
+                        task.exception?.message?.let {
+                            Toast.makeText(this, it, Toast.LENGTH_LONG).show()
                         }
                     }
-
-                    override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                        Toast.makeText(this@LoginActivity, t.message, Toast.LENGTH_SHORT).show()
-                    }
-                })
+                }
         }
 
         // Declaring and initializing the TextView from layout

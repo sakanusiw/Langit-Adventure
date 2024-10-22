@@ -10,7 +10,6 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.langitadventure.BasketFragment
 import com.example.langitadventure.ItemsViewModelCategory
-import com.example.langitadventure.LoginActivity
 import com.example.langitadventure.MainActivity
 import com.example.langitadventure.ProfileFragment
 import com.example.langitadventure.R

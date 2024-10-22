@@ -1,6 +1,5 @@
 package com.example.langitadventure
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
@@ -10,14 +9,13 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import okhttp3.ResponseBody
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import android.widget.Toast
-//import kotlinx.android.synthetic.main.activity_register.*
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 class RegisterActivity : AppCompatActivity() {
+    private lateinit var auth: FirebaseAuth
+    private lateinit var db: FirebaseFirestore
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -27,6 +25,9 @@ class RegisterActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        auth = FirebaseAuth.getInstance()
+        db = FirebaseFirestore.getInstance()
 
         val buttonDaftar = findViewById<Button>(R.id.buttonDaftar)
         val editTextNamaLengkap = findViewById<EditText>(R.id.editTextNamaLengkap)
@@ -41,25 +42,45 @@ class RegisterActivity : AppCompatActivity() {
             val confirmPassword = editTextKonfirmasiPassword.text.toString().trim()
 
             if (password == confirmPassword) {
-                val request = RegisterRequest(name, email, password, confirmPassword)
-                RetrofitClient.instance.register(request)
-                    .enqueue(object : Callback<ResponseBody> {
-                        override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-                            if (response.isSuccessful) {
-                                Toast.makeText(this@RegisterActivity, "Register successful", Toast.LENGTH_SHORT).show()
-                                val intent = Intent(this@RegisterActivity, LoginActivity::class.java)
-                                startActivity(intent)
-                            } else {
-                                Toast.makeText(this@RegisterActivity, "Register failed", Toast.LENGTH_SHORT).show()
+                auth.createUserWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(this) { task ->
+                        if (task.isSuccessful) {
+                            val user = auth.currentUser
+                            user?.sendEmailVerification()?.addOnCompleteListener { verifyTask ->
+                                if (verifyTask.isSuccessful) {
+                                    val userData = hashMapOf(
+                                        "username" to name,
+                                        "email" to email,
+                                        "uid" to user.uid
+                                    )
+                                    db.collection("users").document(user.uid)
+                                        .set(userData)
+                                        .addOnSuccessListener {
+                                            Toast.makeText(this, "Registration successful. Please check your email for verification.", Toast.LENGTH_LONG).show()
+                                            val intent = Intent(this, LoginActivity::class.java)
+                                            startActivity(intent)
+                                            finish()
+                                        }
+                                        .addOnFailureListener { e ->
+                                            // Handle failure
+                                            Toast.makeText(this, "Failed to save user data: ${e.message}", Toast.LENGTH_LONG).show()
+                                        }
+                                } else {
+                                    // Failed to send verification email
+                                    Toast.makeText(this, "Failed to send verification email: ${verifyTask.exception?.message}", Toast.LENGTH_LONG).show()
+                                }
+                            }
+                        } else {
+                            // Registration failed
+                            task.exception?.message?.let {
+                                // Show error message
+                                Toast.makeText(this, it, Toast.LENGTH_LONG).show()
                             }
                         }
-
-                        override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                            Toast.makeText(this@RegisterActivity, t.message, Toast.LENGTH_SHORT).show()
-                        }
-                    })
+                    }
             } else {
-                Toast.makeText(this, "Password does not match", Toast.LENGTH_SHORT).show()
+                // Passwords do not match
+                Toast.makeText(this, "Passwords do not match", Toast.LENGTH_LONG).show()
             }
         }
 

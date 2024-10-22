@@ -52,11 +52,15 @@
         android:elevation="10dp"
         android:background="@drawable/oval">
 
-        <ImageView
-            android:layout_width="120dp"
-            android:layout_height="120dp"
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/imageViewProfilePicture"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_margin="20dp"
             android:layout_gravity="center"
-            android:background="@drawable/profile_picture"/>
+            android:scaleType="centerCrop"
+            android:background="@drawable/profile_picture"
+            app:shapeAppearanceOverlay="@style/CircularImageView"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -71,7 +75,7 @@
                 android:layout_marginBottom="5dp"
                 android:textSize="18sp"
                 android:fontFamily="@font/sansation_bold"
-                android:text="Zack Muckerberg"/>
+                android:text="Loading..."/>
 
             <TextView
                 android:id="@+id/textViewUserEmailProfile"
@@ -79,7 +83,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="14sp"
                 android:fontFamily="@font/sansation_regular"
-                android:text="zack.muckerberg@gmail.com"/>
+                android:text="Loading..."/>
 
         </LinearLayout>
     </LinearLayout>
