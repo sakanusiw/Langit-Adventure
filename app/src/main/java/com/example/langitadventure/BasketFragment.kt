@@ -91,7 +91,7 @@ class BasketFragment : Fragment() {
         // ArrayList of class ItemsViewModelBasket
         val data = ArrayList<ItemsViewModelBasket>()
 
-        data.add(ItemsViewModelBasket("Tenda Dome NSM 4", "06/03/2024 - 08/03/2024", "Durasi: 2 Malam", 1, "Total Biaya: Rp70.000", R.drawable.tenda_dome_nsm4 ))
+        data.add(ItemsViewModelBasket("Tenda Dome NSM 4", "25/12/2024 - 27/12/2024", "Durasi: 2 Malam", 1, "Total Biaya: Rp70.000", R.drawable.tenda_dome_nsm4 ))
         data.add(ItemsViewModelBasket("Tenda Dome NSM 4", "06/03/2024 - 08/03/2024", "Durasi: 2 Malam", 1, "Total Biaya: Rp70.000", R.drawable.tenda_dome_nsm4 ))
         data.add(ItemsViewModelBasket("Tenda Dome NSM 4", "06/03/2024 - 08/03/2024", "Durasi: 2 Malam", 1, "Total Biaya: Rp70.000", R.drawable.tenda_dome_nsm4 ))
 //        data.add(ItemsViewModelBasket("Tenda Dome NSM 4", "06/03/2024 - 08/03/2024", "Durasi: 2 Malam", 1, "Total Biaya: Rp70.000", R.drawable.tenda_dome_nsm4 ))

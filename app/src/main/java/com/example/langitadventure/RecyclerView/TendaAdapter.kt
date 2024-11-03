@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.langitadventure.DetailActivity
 import com.example.langitadventure.ItemsViewModelTenda
 import com.example.langitadventure.MainActivity
@@ -29,30 +30,33 @@ class TendaAdapter(private val mList: List<ItemsViewModelTenda>) : RecyclerView.
     // binds the list items to a view
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
-        val ItemsViewModel = mList[position]
+        val itemsViewModel = mList[position]
 
-        // sets the image to the imageview from our itemHolder class
-        holder.imageButton.setImageResource(ItemsViewModel.image)
+        // Menggunakan Glide untuk memuat gambar dari URL
+        Glide.with(holder.itemView.context)
+            .load(itemsViewModel.imageUrl) // URL gambar dari Firebase
+//            .placeholder(R.drawable.placeholder_image) // Gambar sementara jika perlu
+//            .error(R.drawable.error_image) // Gambar jika terjadi error
+            .into(holder.imageButton)
 
         // sets the text to the textview from our itemHolder class
-        holder.textViewNama.text = ItemsViewModel.textnama
-        holder.textViewHarga.text = ItemsViewModel.textharga
+        holder.textViewNama.text = itemsViewModel.textnama
+        holder.textViewHarga.text = itemsViewModel.textharga
 
         // Menambahkan OnClickListener pada ImageButton
         holder.imageButton.setOnClickListener {
             // Buat intent untuk membuka aktivitas yang sesuai dengan kategori
-            val intent = when (ItemsViewModel.textnama) {
-                "Tenda Dome NSM 4" -> Intent(holder.itemView.context, DetailActivity::class.java)
-//                "Tas" -> Intent(holder.itemView.context, TasActivity::class.java)
-//                "Lampu" -> Intent(holder.itemView.context, RegisterActivity::class.java)
-//                "Pakaian" -> Intent(holder.itemView.context, PakaianActivity::class.java)
-//                "Perlengkapan" -> Intent(holder.itemView.context, PerlengkapanActivity::class.java)
-                else -> Intent(holder.itemView.context, MainActivity::class.java)
+            val intent = Intent(holder.itemView.context, DetailActivity::class.java).apply {
+                putExtra("ITEM_ID", itemsViewModel.itemId)
+                putExtra("ITEM_NAME", itemsViewModel.textnama)
+                putExtra("ITEM_PRICE", itemsViewModel.textharga)
+                putExtra("ITEM_IMAGE_URL", itemsViewModel.imageUrl)
+                putExtra("ITEM_DESCRIPTION", itemsViewModel.description)
+                putExtra("ITEM_AVAILABILITY", itemsViewModel.availability)
+                putExtra("ITEM_BOOKING_COUNT", itemsViewModel.bookingCount)
             }
-            // Mulai aktivitas baru
             holder.itemView.context.startActivity(intent)
         }
-
     }
 
     // return the number of the items in the list

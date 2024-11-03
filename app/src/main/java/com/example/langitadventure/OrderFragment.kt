@@ -53,8 +53,8 @@ class OrderFragment : Fragment() {
         val data = ArrayList<ItemsViewModelOrder>()
 
         data.add(ItemsViewModelOrder(R.drawable.tenda_dome_nsm4,"Tenda Dome NSM4","Rp35.000/Malam","x2 Malam","Sedang Disewa","x1 Barang","Total Biaya: Rp70.000"))
-        data.add(ItemsViewModelOrder(R.drawable.tenda_dome_nsm4,"Tenda Dome NSM4","Rp35.000/Malam","x2 Malam","Sedang Disewa","x1 Barang","Total Biaya: Rp70.000"))
-        data.add(ItemsViewModelOrder(R.drawable.tenda_dome_nsm4,"Tenda Dome NSM4","Rp35.000/Malam","x2 Malam","Sedang Disewa","x1 Barang","Total Biaya: Rp70.000"))
+//        data.add(ItemsViewModelOrder(R.drawable.tenda_dome_nsm4,"Tenda Dome NSM4","Rp35.000/Malam","x2 Malam","Sedang Disewa","x1 Barang","Total Biaya: Rp70.000"))
+//        data.add(ItemsViewModelOrder(R.drawable.tenda_dome_nsm4,"Tenda Dome NSM4","Rp35.000/Malam","x2 Malam","Sedang Disewa","x1 Barang","Total Biaya: Rp70.000"))
 //        data.add(ItemsViewModelOrder(R.drawable.tenda_dome_nsm4,"Tenda Dome NSM4","Rp35.000/Malam","x2 Malam","Sedang Disewa","x1 Barang","Total Biaya: Rp70.000"))
 //        data.add(ItemsViewModelOrder(R.drawable.tenda_dome_nsm4,"Tenda Dome NSM4","Rp35.000/Malam","x2 Malam","Sedang Disewa","x1 Barang","Total Biaya: Rp70.000"))
 //        data.add(ItemsViewModelOrder(R.drawable.tenda_dome_nsm4,"Tenda Dome NSM4","Rp35.000/Malam","x2 Malam","Sedang Disewa","x1 Barang","Total Biaya: Rp70.000"))
