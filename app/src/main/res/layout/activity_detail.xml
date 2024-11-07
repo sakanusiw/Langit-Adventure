@@ -179,18 +179,27 @@
                     android:text="Rp35.000/Malam"/>
 
                 <TextView
-                    android:id="@+id/textViewDetailTanggal"
+                    android:id="@+id/textViewTanggalMulai"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/black"
                     android:fontFamily="@font/sansation_regular"
-                    android:textSize="20sp"
-                    android:text="Pilih Tanggal"/>
+                    android:textSize="15sp"
+                    android:text="Pilih Tanggal Sewa"/>
+
+                <TextView
+                    android:id="@+id/textViewTanggalAkhir"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/sansation_regular"
+                    android:textSize="15sp"
+                    android:text="Pilih Tanggal Pengembalian"/>
 
             </LinearLayout>
 
             <Button
-                android:id="@+id/buttonDetailKeranjang"
+                android:id="@+id/buttonDetailTambahKeranjang"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end|center_vertical"

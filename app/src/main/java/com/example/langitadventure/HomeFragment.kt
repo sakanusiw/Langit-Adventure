@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.langitadventure.RecyclerView.CategoryAdapter
 import com.example.langitadventure.RecyclerView.TendaAdapter
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.toObject
 
@@ -23,8 +24,12 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private var param2: String? = null
 
     private lateinit var firestore: FirebaseFirestore
+//    Adapter dan data untuk masing-masing barang
     private lateinit var tendaAdapter: TendaAdapter
-    private val data1 = ArrayList<ItemsViewModelTenda>()
+    private val dataTenda = ArrayList<ItemsViewModelTenda>()
+    private lateinit var tasAdapter: TendaAdapter
+    private val dataTas = ArrayList<ItemsViewModelTenda>()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,32 +75,84 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         recyclerViewTenda.layoutManager = GridLayoutManager(requireContext(), 2)
 
         // Menginisialisasi adapter untuk Tenda dan mengaturnya ke RecyclerView
-        tendaAdapter = TendaAdapter(data1)
+        tendaAdapter = TendaAdapter(dataTenda)
         recyclerViewTenda.adapter = tendaAdapter
 
+        // RecyclerView untuk Tas
+        val recyclerViewTas = view.findViewById<RecyclerView>(R.id.recyclerViewTas)
+        recyclerViewTas.layoutManager = GridLayoutManager(requireContext(), 2)
+        tasAdapter = TendaAdapter(dataTas)
+        recyclerViewTas.adapter = tasAdapter
+
         // Memuat data dari Firestore
-        loadDataFromFirestore()
+        loadDataFromFirestoreForTenda()
+        loadDataFromFirestoreForTas()
     }
 
-    private fun loadDataFromFirestore() {
+    private fun loadDataFromFirestoreForTenda() {
         firestore.collection("items") // Nama koleksi Firestore
+            .whereEqualTo("category", "Tenda") // Filter kategori jika diperlukan
             .get()
-            .addOnSuccessListener { result ->
-                data1.clear() // Hapus data lama
-                for (document in result) {
-                    val item = document.toObject<ItemsViewModelTenda>()
-                    item.itemId = document.id // Set ID dokumen sebagai itemId
-                    Log.d("HomeFragment", "Loaded item: $item") // Log item yang diambil
-                    data1.add(item)
+            .addOnSuccessListener { documents ->
+                dataTenda.clear() // Hapus data lama
+                for (document in documents) {
+                    // Konversi data Firestore ke model item Tenda
+                    val item = convertDocumentToItem(document)
+                    dataTenda.add(item)
                 }
                 // Notifikasi perubahan data di adapter
                 tendaAdapter.notifyDataSetChanged()
-                Log.d("HomeFragment", "Total items loaded: ${data1.size}")
+                Log.d("HomeFragment", "Total items loaded: ${dataTenda.size}")
             }
             .addOnFailureListener { exception ->
                 Log.e("HomeFragment", "Error loading data from Firestore", exception)
-                Toast.makeText(requireContext(), "Error loading data", Toast.LENGTH_SHORT).show() // Feedback untuk pengguna
+                Toast.makeText(requireContext(), "Error loading Tenda data", Toast.LENGTH_SHORT).show() // Feedback untuk pengguna
             }
+    }
+
+    private fun loadDataFromFirestoreForTas() {
+        firestore.collection("items") // Nama koleksi Firestore
+            .whereEqualTo("category", "Tas") // Filter kategori jika diperlukan
+            .get()
+            .addOnSuccessListener { documents ->
+                dataTas.clear() // Hapus data lama
+                for (document in documents) {
+                    // Konversi data Firestore ke model item Tenda
+                    val item = convertDocumentToItem(document)
+                    dataTas.add(item)
+                }
+                // Notifikasi perubahan data di adapter
+                tasAdapter.notifyDataSetChanged()
+                Log.d("HomeFragment", "Total items loaded: ${dataTas.size}")
+            }
+            .addOnFailureListener { exception ->
+                Log.e("HomeFragment", "Error loading data from Firestore", exception)
+                Toast.makeText(requireContext(), "Error loading Tenda data", Toast.LENGTH_SHORT).show() // Feedback untuk pengguna
+            }
+    }
+
+    private fun convertDocumentToItem(document: DocumentSnapshot): ItemsViewModelTenda {
+        val namaBarang = document.getString("name") ?: ""
+        val hargaPerMalam = document.getDouble("price_per_night")?.toInt() ?: 0
+        val gambarBarang = document.getString("image_url") ?: ""
+        val availability = document.getBoolean("availability") ?: false
+        val bookingCount = document.getLong("booking_count")?.toInt() ?: 0
+        val category = document.getString("category") ?: ""
+        val description = document.getString("description") ?: ""
+
+        // Log nilai yang diambil untuk debugging
+        Log.d("TendaActivity", "namaBarang: $namaBarang, hargaPerMalam: $hargaPerMalam, gambarBarang: $gambarBarang, availability: $availability, bookingCount: $bookingCount, category: $category, description: $description")
+
+        return ItemsViewModelTenda(
+            imageUrl = gambarBarang, // URL gambar dari Firestore
+            textnama = namaBarang,
+            textharga = "Rp$hargaPerMalam/Malam", // Format harga
+            availability = availability,
+            bookingCount = bookingCount,
+            category = category,
+            description = description,
+            itemId = document.id // ID dokumen unik
+        )
     }
 
     companion object {

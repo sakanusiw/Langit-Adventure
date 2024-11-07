@@ -15,6 +15,7 @@ import com.example.langitadventure.R
 import com.example.langitadventure.TasActivity
 import com.example.langitadventure.TendaActivity
 
+// Adapter untuk barang-barang / item
 class TendaAdapter(private val mList: List<ItemsViewModelTenda>) : RecyclerView.Adapter<TendaAdapter.ViewHolder>() {
 
     // create new views
