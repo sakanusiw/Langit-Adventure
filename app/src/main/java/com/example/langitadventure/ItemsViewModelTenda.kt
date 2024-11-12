@@ -1,6 +1,6 @@
 package com.example.langitadventure
 import com.google.firebase.firestore.PropertyName
-
+//ItemsViewModel untuk semua Barang
 data class ItemsViewModelTenda(
     @get:PropertyName("image_url") val imageUrl: String = "", // URL gambar dari Firestore
     @get:PropertyName("name") val textnama: String = "", // Nama barang

@@ -83,7 +83,7 @@
         app:layout_constraintTop_toBottomOf="@+id/recyclerViewBasket">
 
         <TextView
-            android:id="@+id/textViewTotal"
+            android:id="@+id/textViewTotalHarga"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -91,7 +91,7 @@
             android:layout_gravity="center_vertical"
             android:textColor="@color/mainblue"
             android:fontFamily="@font/sansation_bold"
-            android:text="Total: Rp210.000"/>
+            android:text="Total: Rp0"/>
 
         <Button
             android:id="@+id/buttonBayar"

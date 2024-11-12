@@ -91,15 +91,75 @@ class DetailActivity : AppCompatActivity() {
             // Jika tanggal sewa atau tanggal kembali belum dipilih
             Toast.makeText(this, "Silakan pilih tanggal sewa dan tanggal kembali", Toast.LENGTH_SHORT).show()
         } else {
-            // Jika pengguna sudah login dan tanggal sudah dipilih, tambahkan ke keranjang
-            addToCart()
+            // Cek apakah tanggal sewa dan tanggal kembali berbeda
+            if (startDate != endDate) {
+                // Jika tanggal sewa dan tanggal kembali berbeda, tambahkan ke keranjang
+                addToCart()
+            } else {
+                // Jika tanggal sewa dan tanggal kembali sama, beri pesan
+                Toast.makeText(this, "Tanggal sewa dan kembali tidak boleh sama", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
     private fun addToCart() {
-        // Implementasi logika untuk menambahkan item ke keranjang di sini
-        Toast.makeText(this, "Item berhasil ditambahkan ke keranjang", Toast.LENGTH_SHORT).show()
+        // Pastikan pengguna sudah login
+        val userId = auth.currentUser?.uid
+        val itemPricePerNight = intent.getIntExtra("ITEM_PRICE", 0) // Retrieve from intent with a default value
+        val itemId = intent.getStringExtra("ITEM_ID") ?: "" // Ambil itemId dari intent
+
+        if (userId != null && startDate != null && endDate != null && itemPricePerNight > 0) {
+            // Periksa apakah item sudah ada di keranjang
+            firestore.collection("users").document(userId).collection("cart")
+                .whereEqualTo("itemId", itemId)
+                .get()
+                .addOnSuccessListener { querySnapshot ->
+                    if (!querySnapshot.isEmpty) {
+                        // Jika item sudah ada di keranjang, tampilkan pesan
+                        Toast.makeText(this, "Item sudah ada di keranjang", Toast.LENGTH_SHORT).show()
+                    } else {
+                        // Jika item belum ada di keranjang, lanjutkan proses penambahan
+                        // Hitung durasi sewa dalam malam
+                        val duration = TimeUnit.MILLISECONDS.toDays(endDate!! - startDate!!).toInt()
+
+                        // Ambil detail item yang ditampilkan di halaman detail
+                        val itemName = findViewById<TextView>(R.id.textViewNamaBarang).text.toString()
+                        val imageUrl = intent.getStringExtra("ITEM_IMAGE_URL") ?: ""
+
+                        // Hitung total harga berdasarkan durasi
+                        val totalPrice = duration * itemPricePerNight
+
+                        // Data yang akan disimpan ke Firestore
+                        val cartItem = hashMapOf(
+                            "itemId" to itemId,
+                            "itemName" to itemName,
+                            "startDate" to startDate,
+                            "endDate" to endDate,
+                            "duration" to duration,
+                            "quantity" to 1,
+                            "totalPrice" to totalPrice,
+                            "imageUrl" to imageUrl
+                        )
+
+                        // Akses ke sub-koleksi `cart` dalam dokumen pengguna
+                        firestore.collection("users").document(userId).collection("cart")
+                            .add(cartItem)
+                            .addOnSuccessListener {
+                                Toast.makeText(this, "Item berhasil ditambahkan ke keranjang", Toast.LENGTH_SHORT).show()
+                            }
+                            .addOnFailureListener { e ->
+                                Toast.makeText(this, "Gagal menambahkan item: ${e.message}", Toast.LENGTH_SHORT).show()
+                            }
+                    }
+                }
+                .addOnFailureListener { e ->
+                    Toast.makeText(this, "Gagal memeriksa keranjang: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
+        } else {
+            Toast.makeText(this, "Silakan pilih tanggal sewa dan login terlebih dahulu", Toast.LENGTH_SHORT).show()
+        }
     }
+
 
     private fun getItemDetails(itemId: String) {
         firestore.collection("items") // Ganti dengan nama koleksi Anda
@@ -110,7 +170,7 @@ class DetailActivity : AppCompatActivity() {
                     val itemName = document.getString("name") // Change to the correct field names
                     val itemDescription = document.getString("description")
                     val itemCategory = document.getString("category")
-                    val itemPrice = document.getDouble("price_per_night")?.toInt() // Ensure the field name matches your Firestore data
+                    val itemPricePerNight = document.getDouble("price_per_night")?.toInt() // Ensure the field name matches your Firestore data
                     val itemImage = document.getString("image_url")
                     val itemAvailable = document.getBoolean("availability") ?: false
 
@@ -118,7 +178,15 @@ class DetailActivity : AppCompatActivity() {
                     findViewById<TextView>(R.id.textViewDetailKategori).text = itemCategory ?: "Kategori tidak tersedia"
                     findViewById<TextView>(R.id.textViewNamaBarang).text = itemName ?: "Nama tidak tersedia"
                     findViewById<TextView>(R.id.textViewDeskripsiText).text = itemDescription ?: "Deskripsi tidak tersedia"
-                    findViewById<TextView>(R.id.textViewDetailHarga).text = itemPrice?.let { "Rp$it/Malam" } ?: "Harga tidak tersedia"
+                    findViewById<TextView>(R.id.textViewDetailHarga).text = itemPricePerNight?.let { "Rp$it/Malam" } ?: "Harga tidak tersedia"
+
+                    // Set itemPricePerNight in intent extras for use in addToCart
+                    if (itemPricePerNight != null) {
+                        intent.putExtra("ITEM_PRICE", itemPricePerNight)
+                        Log.d("DetailActivity", "Retrieved item price per night: $itemPricePerNight")
+                    } else {
+                        Log.w("DetailActivity", "itemPricePerNight is null")
+                    }
 
                     // Jika menggunakan image loading library seperti Glide
                     itemImage?.let {

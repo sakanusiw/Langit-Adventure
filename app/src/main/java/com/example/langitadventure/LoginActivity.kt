@@ -33,6 +33,19 @@ class LoginActivity : AppCompatActivity() {
             val email = editTextEmail.text.toString().trim()
             val password = editTextPassword.text.toString().trim()
 
+            // Validasi kolom kosong
+            if (email.isEmpty()) {
+                editTextEmail.error = "Email harus diisi"
+                editTextEmail.requestFocus()
+                return@setOnClickListener
+            }
+
+            if (password.isEmpty()) {
+                editTextPassword.error = "Password harus diisi"
+                editTextPassword.requestFocus()
+                return@setOnClickListener
+            }
+
             auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {

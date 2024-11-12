@@ -41,6 +41,45 @@ class RegisterActivity : AppCompatActivity() {
             val password = editTextPassword.text.toString().trim()
             val confirmPassword = editTextKonfirmasiPassword.text.toString().trim()
 
+            // Validasi kolom kosong
+            if (name.isEmpty()) {
+                editTextNamaLengkap.error = "Nama lengkap harus diisi"
+                editTextNamaLengkap.requestFocus()
+                return@setOnClickListener
+            }
+
+            if (email.isEmpty()) {
+                editTextEmail.error = "Email harus diisi"
+                editTextEmail.requestFocus()
+                return@setOnClickListener
+            }
+
+            if (password.isEmpty()) {
+                editTextPassword.error = "Password harus diisi"
+                editTextPassword.requestFocus()
+                return@setOnClickListener
+            }
+
+            if (confirmPassword.isEmpty()) {
+                editTextKonfirmasiPassword.error = "Konfirmasi password harus diisi"
+                editTextKonfirmasiPassword.requestFocus()
+                return@setOnClickListener
+            }
+
+            // Validasi panjang minimal password
+            if (password.length < 6) {
+                editTextPassword.error = "Password harus terdiri dari minimal 6 karakter"
+                editTextPassword.requestFocus()
+                return@setOnClickListener
+            }
+
+            // Validasi konfirmasi password
+            if (password != confirmPassword) {
+                editTextKonfirmasiPassword.error = "Password dan konfirmasi password tidak cocok"
+                editTextKonfirmasiPassword.requestFocus()
+                return@setOnClickListener
+            }
+
             if (password == confirmPassword) {
                 auth.createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener(this) { task ->

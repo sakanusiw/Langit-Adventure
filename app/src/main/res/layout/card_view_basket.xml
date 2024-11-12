@@ -80,14 +80,39 @@
                     android:textSize="16sp"
                     android:fontFamily="@font/sansation_regular"/>
 
-                <TextView
-                    android:id="@+id/textViewCardKeranjangTanggal"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="06/03/2024 - 08/03/2024"
-                    android:textColor="@color/black"
-                    android:textSize="14sp"
-                    android:fontFamily="@font/sansation_regular"/>
+                    android:orientation="horizontal"
+                    android:layout_gravity="center">
+
+                    <TextView
+                        android:id="@+id/textViewCardKeranjangTanggalSewa"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="06/03/2024"
+                        android:textColor="@color/black"
+                        android:textSize="14sp"
+                        android:fontFamily="@font/sansation_regular"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=" - "
+                        android:textColor="@color/black"
+                        android:textSize="14sp"
+                        android:fontFamily="@font/sansation_regular"/>
+
+                    <TextView
+                        android:id="@+id/textViewCardKeranjangTanggalKembali"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="08/03/2024"
+                        android:textColor="@color/black"
+                        android:textSize="14sp"
+                        android:fontFamily="@font/sansation_regular"/>
+
+                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -96,10 +121,28 @@
                     android:orientation="horizontal">
 
                     <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Durasi: "
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
+                        android:fontFamily="@font/sansation_regular"
+                        android:layout_gravity="center"/>
+
+                    <TextView
                         android:id="@+id/textViewCardKeranjangDurasi"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Durasi: 2 Malam"
+                        android:text=" 2 "
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
+                        android:fontFamily="@font/sansation_regular"
+                        android:layout_gravity="center"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=" Malam"
                         android:textColor="@color/black"
                         android:textSize="16sp"
                         android:fontFamily="@font/sansation_regular"
@@ -142,14 +185,29 @@
 
                 </LinearLayout>
 
-                <TextView
-                    android:id="@+id/textViewCardKeranjangTotal"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Total Biaya: Rp70.000"
-                    android:textColor="@color/mainblue"
-                    android:textSize="18sp"
-                    android:fontFamily="@font/sansation_bold"/>
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Total Biaya: Rp"
+                        android:textColor="@color/mainblue"
+                        android:textSize="18sp"
+                        android:fontFamily="@font/sansation_bold"/>
+
+                    <TextView
+                        android:id="@+id/textViewCardKeranjangTotalHarga"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="70.000"
+                        android:textColor="@color/mainblue"
+                        android:textSize="18sp"
+                        android:fontFamily="@font/sansation_bold"/>
+
+                </LinearLayout>
 
             </LinearLayout>
         </LinearLayout>
