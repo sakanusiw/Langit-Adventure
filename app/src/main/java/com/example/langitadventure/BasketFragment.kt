@@ -20,19 +20,10 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [BasketFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class BasketFragment : Fragment() {
-    // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
 
@@ -54,7 +45,6 @@ class BasketFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
-        // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_basket, container, false)
 
         // Initialize Firebase
@@ -86,8 +76,6 @@ class BasketFragment : Fragment() {
         spannableString.setSpan(UnderlineSpan(), 0, spannableString.length, 0)
         totalPriceTextView.text = spannableString
 
-        //BasketRecyclerView
-
         // Set up RecyclerView
         recyclerView = view.findViewById(R.id.recyclerViewBasket)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
@@ -95,11 +83,11 @@ class BasketFragment : Fragment() {
             itemsList,
             onItemRemoved = { itemPrice ->
                 // Update total price after item removed
-                updateTotalPrice(itemPrice)
+                updateTotalPrice()
             },
             onQuantityChanged = { totalPrice ->
                 // Update total price after quantity changed
-                updateTotalPrice(totalPrice)
+                updateTotalPrice()
             }
         )
         recyclerView.adapter = basketAdapter
@@ -108,7 +96,7 @@ class BasketFragment : Fragment() {
         fetchBasketItems(totalPriceTextView)
     }
 
-    private fun updateTotalPrice(price: Int) {
+    private fun updateTotalPrice() {
         val totalPriceTextView = view?.findViewById<TextView>(R.id.textViewTotalHarga)
         val totalHarga = itemsList.sumOf { it.totalPrice } // Calculate the total price
         val formattedPrice = String.format("Total: Rp%,d", totalHarga)
@@ -127,54 +115,51 @@ class BasketFragment : Fragment() {
                 .get()
                 .addOnSuccessListener { querySnapshot ->
                     itemsList.clear() // Clear list sebelum menambah data baru
-                    val itemIds = mutableSetOf<String>() // Set untuk menyimpan itemId yang unik
                     var totalHarga = 0
                     Log.d("BasketFragment", "Fetched ${querySnapshot.size()} items")
 
                     querySnapshot.documents.forEach { document ->
+                        val cartDocumentId = document.id
                         val itemId = document.getString("itemId") ?: ""
-                        if (itemId.isNotEmpty() && itemIds.add(itemId)) { // Hanya menambah item jika itemId unik
+                        if (itemId.isNotEmpty()) { // Allow duplicates
                             val itemName = document.getString("itemName") ?: ""
                             val startDate = document.getLong("startDate")
                             val endDate = document.getLong("endDate")
                             val duration = document.getLong("duration")?.toInt() ?: 0
                             val quantity = document.getLong("quantity")?.toInt() ?: 1
                             val imageUrl = document.getString("imageUrl") ?: ""
+                            val pricePerNight = document.getLong("price_per_night")?.toInt() ?: 0
 
-                            getItemPrice(itemId) { pricePerNight ->
-                                val totalItemPrice = pricePerNight * duration * quantity
-                                val formattedStartDate = formatDate(startDate)
-                                val formattedEndDate = formatDate(endDate)
+                            val totalItemPrice = pricePerNight * duration * quantity
+                            val formattedStartDate = formatDate(startDate)
+                            val formattedEndDate = formatDate(endDate)
 
-                                val basketItem = ItemsViewModelBasket(
-                                    itemName,
-                                    formattedStartDate,
-                                    formattedEndDate,
-                                    duration,
-                                    quantity,
-                                    totalItemPrice,
-                                    imageUrl,
-                                    itemId,                // Pastikan itemId ditambahkan
-                                    pricePerNight          // Tambahkan pricePerNight
-                                )
+                            val basketItem = ItemsViewModelBasket(
+                                itemName,
+                                formattedStartDate,
+                                formattedEndDate,
+                                duration,
+                                quantity,
+                                totalItemPrice,
+                                imageUrl,
+                                itemId,
+                                pricePerNight,
+                                cartDocumentId
+                            )
 
-                                itemsList.add(basketItem)
-                                totalHarga += totalItemPrice
-
-                                // Update UI setelah semua item selesai diproses
-                                if (itemsList.size == itemIds.size) {
-                                    basketAdapter.notifyDataSetChanged()
-                                    val formattedPrice = String.format("Total: Rp%,d", totalHarga)
-                                    totalPriceTextView.text = SpannableString(formattedPrice).apply {
-                                        setSpan(UnderlineSpan(), 0, length, 0)
-                                    }
-                                    togglePaymentButton(totalHarga)
-                                }
-                            }
+                            itemsList.add(basketItem)
+                            totalHarga += totalItemPrice
                         } else {
-                            Log.e("BasketFragment", "Item ID tidak valid atau duplikat di cart user.")
+                            Log.e("BasketFragment", "Item ID tidak valid di cart user.")
                         }
                     }
+
+                    basketAdapter.notifyDataSetChanged()
+                    val formattedPrice = String.format("Total: Rp%,d", totalHarga)
+                    totalPriceTextView.text = SpannableString(formattedPrice).apply {
+                        setSpan(UnderlineSpan(), 0, length, 0)
+                    }
+                    togglePaymentButton(totalHarga)
 
                     // Atur status tombol bayar sesuai jumlah item
                     view?.findViewById<Button>(R.id.buttonBayar)?.isEnabled = itemsList.isNotEmpty()
@@ -185,29 +170,24 @@ class BasketFragment : Fragment() {
         }
     }
 
-
     private fun getItemPrice(itemId: String, callback: (Int) -> Unit) {
-
         if (itemId.isEmpty()) {
             Log.e("BasketFragment", "Invalid itemId")
+            callback(0)
+            return
         }
 
-        if (itemId.isNotEmpty()) {
-            firestore.collection("items")
-                .document(itemId)
-                .get()
-                .addOnSuccessListener { document ->
-                    val pricePerNight = document.getLong("price_per_night")?.toInt() ?: 0
-                    callback(pricePerNight)
-                }
-                .addOnFailureListener { e ->
-                    Log.e("BasketFragment", "Error fetching item price for itemId: $itemId", e)
-                    callback(0)
-                }
-        } else {
-            Log.e("BasketFragment", "itemId tidak valid atau kosong")
-            callback(0)
-        }
+        firestore.collection("items")
+            .document(itemId)
+            .get()
+            .addOnSuccessListener { document ->
+                val pricePerNight = document.getLong("price_per_night")?.toInt() ?: 0
+                callback(pricePerNight)
+            }
+            .addOnFailureListener { e ->
+                Log.e("BasketFragment", "Error fetching item price for itemId: $itemId", e)
+                callback(0)
+            }
     }
 
     // Fungsi untuk mengubah timestamp menjadi tanggal dengan format DD/MM/YYYY
@@ -226,16 +206,7 @@ class BasketFragment : Fragment() {
         buttonBayar?.isEnabled = totalHarga > 0
     }
 
-
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment BasketFragment.
-         */
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
             BasketFragment().apply {

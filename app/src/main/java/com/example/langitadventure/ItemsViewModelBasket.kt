@@ -9,24 +9,25 @@ data class ItemsViewModelBasket(
     var totalPrice: Int = 0,
     val imageUrl: String = "",
     val itemId: String = "",
-    var pricePerNight: Int = 0
+    var pricePerNight: Int = 0,
+    val cartDocumentId: String = ""
 )
  {
-    fun incrementQuantity(maxQuantity: Int = Int.MAX_VALUE) {
-        if (quantity < maxQuantity) {
-            quantity++
-        }
-    }
-
-    fun decrementQuantity() {
-        if (quantity > 1) {
-            quantity--
-        }
-    }
-
-    // Calculates total price based on quantity and price per night
-    fun calculateTotalPrice(pricePerNight: Int): Int {
-        return pricePerNight * duration * quantity
-    }
+//    fun incrementQuantity(maxQuantity: Int = Int.MAX_VALUE) {
+//        if (quantity < maxQuantity) {
+//            quantity++
+//        }
+//    }
+//
+//    fun decrementQuantity() {
+//        if (quantity > 1) {
+//            quantity--
+//        }
+//    }
+//
+//    // Calculates total price based on quantity and price per night
+//    fun calculateTotalPrice(pricePerNight: Int): Int {
+//        return pricePerNight * duration * quantity
+//    }
 
 }

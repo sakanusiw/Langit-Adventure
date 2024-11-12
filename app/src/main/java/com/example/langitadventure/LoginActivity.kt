@@ -51,10 +51,11 @@ class LoginActivity : AppCompatActivity() {
                     if (task.isSuccessful) {
                         val user = auth.currentUser
                         if (user?.isEmailVerified == true) {
-                            // Email is verified, proceed to main activity
-                            val intent = Intent(this, OrderActivity::class.java)
+                            // Email is verified, proceed to home activity
+                            val intent = Intent(this, HomeActivity::class.java)
                             startActivity(intent)
                             finish()
+                            Toast.makeText(this, "Login berhasil", Toast.LENGTH_SHORT).show()
                         } else {
                             // Email is not verified, show message
                             Toast.makeText(this, "Please verify your email address.", Toast.LENGTH_LONG).show()

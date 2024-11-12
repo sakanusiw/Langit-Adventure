@@ -32,39 +32,27 @@ class BasketAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = mList[position]
 
-        // Mengambil harga per malam dari Firestore
-        db.collection("items").document(item.itemId).get()
-            .addOnSuccessListener { document ->
-                if (document != null && document.exists()) {
-                    item.pricePerNight = document.getLong("price_per_night")?.toInt() ?: 0
+        // Set total price
+        holder.totalPrice.text = "Rp${item.totalPrice}"
 
-                    // Set total harga awal berdasarkan kuantitas
-                    item.totalPrice = item.pricePerNight * item.quantity
-                    holder.totalPrice.text = "Rp${item.totalPrice}" // Format harga
+        // Set other fields
+        holder.itemName.text = item.itemName
+        holder.startDate.text = item.formattedStartDate
+        holder.endDate.text = item.formattedEndDate
+        holder.duration.text = item.duration.toString()
+        holder.quantity.text = item.quantity.toString()
 
-                    // Mengatur tampilan item lainnya
-                    holder.itemName.text = item.itemName
-                    holder.startDate.text = item.formattedStartDate
-                    holder.endDate.text = item.formattedEndDate
-                    holder.duration.text = item.duration.toString()
-                    holder.quantity.text = item.quantity.toString()
+        // Load image using Glide
+        Glide.with(holder.itemView.context)
+            .load(item.imageUrl)
+            .into(holder.itemImage)
 
-                    // Memuat gambar menggunakan Glide
-                    Glide.with(holder.itemView.context)
-                        .load(item.imageUrl)
-                        .into(holder.itemImage)
-                }
-            }
-            .addOnFailureListener { e ->
-                Log.e("BasketAdapter", "Gagal mengambil pricePerNight dari Firestore", e)
-            }
-
-        // Fungsi untuk menghapus item dari keranjang
+        // Delete button
         holder.deleteButton.setOnClickListener {
-            val itemId = item.itemId
-            if (itemId.isNotEmpty()) {
+            val cartDocumentId = item.cartDocumentId
+            if (cartDocumentId.isNotEmpty()) {
                 db.collection("users").document(auth.currentUser!!.uid).collection("cart")
-                    .document(itemId)
+                    .document(cartDocumentId)
                     .delete()
                     .addOnSuccessListener {
                         onItemRemoved(item.totalPrice)
@@ -72,12 +60,14 @@ class BasketAdapter(
                         notifyItemRemoved(position)
                     }
                     .addOnFailureListener { e ->
-                        Log.e("BasketAdapter", "Gagal menghapus item: $itemId", e)
+                        Log.e("BasketAdapter", "Gagal menghapus item: $cartDocumentId", e)
                     }
+            } else {
+                Log.e("BasketAdapter", "cartDocumentId kosong untuk item: ${item.itemId}")
             }
         }
 
-        // Menambah kuantitas
+        // Plus button
         holder.plusButton.setOnClickListener {
             if (item.quantity < 10) { // Batasi maksimal 10
                 item.quantity++
@@ -85,7 +75,7 @@ class BasketAdapter(
             }
         }
 
-        // Mengurangi kuantitas
+        // Minus button
         holder.minusButton.setOnClickListener {
             if (item.quantity > 1) { // Batasi minimal 1
                 item.quantity--
@@ -96,19 +86,19 @@ class BasketAdapter(
 
     private fun updateItemQuantity(item: ItemsViewModelBasket, holder: ViewHolder) {
         // Perbarui jumlah kuantitas dan total harga item
-        item.totalPrice = item.pricePerNight * item.quantity
+        item.totalPrice = item.pricePerNight * item.quantity * item.duration
         holder.quantity.text = item.quantity.toString()
         holder.totalPrice.text = "Rp${item.totalPrice}"
 
-        // Simpan pembaruan kuantitas ke Firebase
+        // Simpan pembaruan kuantitas dan total harga ke Firestore
         db.collection("users").document(auth.currentUser!!.uid).collection("cart")
-            .document(item.itemId)
-            .update("quantity", item.quantity)
+            .document(item.cartDocumentId)
+            .update("quantity", item.quantity, "totalPrice", item.totalPrice)
             .addOnSuccessListener {
                 onQuantityChanged(item.totalPrice) // Perbarui total harga secara keseluruhan
             }
             .addOnFailureListener { e ->
-                Log.e("BasketAdapter", "Gagal memperbarui kuantitas item: ${item.itemId}", e)
+                Log.e("BasketAdapter", "Gagal memperbarui kuantitas item: ${item.cartDocumentId}", e)
             }
     }
 

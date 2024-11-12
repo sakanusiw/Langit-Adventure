@@ -128,27 +128,31 @@ class DetailActivity : AppCompatActivity() {
 
                         // Hitung total harga berdasarkan durasi
                         val totalPrice = duration * itemPricePerNight
+                        Log.d("DetailActivity", "Total Price: $totalPrice")
 
                         // Data yang akan disimpan ke Firestore
                         val cartItem = hashMapOf(
                             "itemId" to itemId,
                             "itemName" to itemName,
-                            "startDate" to startDate,
-                            "endDate" to endDate,
-                            "duration" to duration,
+                            "startDate" to startDate, // waktu dalam milidetik
+                            "endDate" to endDate, // waktu dalam milidetik
+                            "duration" to duration, // durasi dalam malam
                             "quantity" to 1,
                             "totalPrice" to totalPrice,
-                            "imageUrl" to imageUrl
+                            "imageUrl" to imageUrl,
+                            "price_per_night" to itemPricePerNight // Menambahkan price_per_night untuk sinkronisasi dengan BasketFragment
                         )
 
                         // Akses ke sub-koleksi `cart` dalam dokumen pengguna
                         firestore.collection("users").document(userId).collection("cart")
                             .add(cartItem)
-                            .addOnSuccessListener {
+                            .addOnSuccessListener {documentReference ->
                                 Toast.makeText(this, "Item berhasil ditambahkan ke keranjang", Toast.LENGTH_SHORT).show()
+                                Log.d("DetailActivity", "Item added with ID: ${documentReference.id}")
                             }
                             .addOnFailureListener { e ->
                                 Toast.makeText(this, "Gagal menambahkan item: ${e.message}", Toast.LENGTH_SHORT).show()
+                                Log.e("DetailActivity", "Error adding item to cart", e)
                             }
                     }
                 }

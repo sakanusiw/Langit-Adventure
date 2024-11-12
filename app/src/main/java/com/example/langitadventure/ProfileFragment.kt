@@ -48,6 +48,14 @@ class ProfileFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_profile, container, false)
 
+        auth = FirebaseAuth.getInstance()
+        if (auth.currentUser == null) {
+            val intent = Intent(requireActivity(), LoginActivity::class.java)
+            startActivity(intent)
+            requireActivity().finish()
+            Toast.makeText(requireContext(), "Silahkan Login Terlebih Dahulu", Toast.LENGTH_SHORT).show()
+        }
+
         // Temukan ImageView untuk gambar profil
         imageViewProfilePicture = view.findViewById(R.id.imageViewProfilePicture)
 
