@@ -23,6 +23,18 @@
         android:theme="@style/Theme.LangitAdventure"
         tools:targetApi="31">
         <activity
+            android:name=".PerlengkapanActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AlatMasakActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SepatuActivity"
+            android:exported="false" />
+        <activity
+            android:name=".PakaianActivity"
+            android:exported="false" />
+        <activity
             android:name=".LampuActivity"
             android:exported="false" />
         <activity

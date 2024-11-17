@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.langitadventure.RecyclerView.TendaAdapter
 import com.google.firebase.firestore.FirebaseFirestore
 
-class LampuActivity : AppCompatActivity() {
+class SepatuActivity : AppCompatActivity() {
 
     private lateinit var recyclerView1: RecyclerView
     private lateinit var tendaAdapter: TendaAdapter
@@ -21,7 +21,7 @@ class LampuActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_lampu)
+        setContentView(R.layout.activity_sepatu)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -29,8 +29,8 @@ class LampuActivity : AppCompatActivity() {
         }
 
         // Menginisialisasi RecyclerView
-        recyclerView1 = findViewById(R.id.recyclerViewLampu)
-        recyclerView1.layoutManager = GridLayoutManager(this@LampuActivity, 2)
+        recyclerView1 = findViewById(R.id.recyclerViewSepatu)
+        recyclerView1.layoutManager = GridLayoutManager(this@SepatuActivity, 2)
 
         // Mengatur Adapter awal dengan list kosong
         tendaAdapter = TendaAdapter(data1)
@@ -58,7 +58,7 @@ class LampuActivity : AppCompatActivity() {
         val firestore = FirebaseFirestore.getInstance()
 
         firestore.collection("items")
-            .whereEqualTo("category", "Lampu") // Filter kategori jika diperlukan
+            .whereEqualTo("category", "Sepatu") // Filter kategori jika diperlukan
             .get()
             .addOnSuccessListener { documents ->
                 data1.clear() // Bersihkan list sebelumnya
@@ -72,7 +72,7 @@ class LampuActivity : AppCompatActivity() {
                     val description = document.getString("description") ?: ""
 
                     // Log nilai yang diambil untuk debugging
-                    Log.d("LampuActivity", "namaBarang: $namaBarang, hargaPerMalam: $hargaPerMalam, gambarBarang: $gambarBarang, availability: $availability, bookingCount: $bookingCount, category: $category, description: $description")
+                    Log.d("SepatuActivity", "namaBarang: $namaBarang, hargaPerMalam: $hargaPerMalam, gambarBarang: $gambarBarang, availability: $availability, bookingCount: $bookingCount, category: $category, description: $description")
 
                     // Tambahkan data ke dalam list
                     val item = ItemsViewModelTenda(
@@ -91,7 +91,7 @@ class LampuActivity : AppCompatActivity() {
                 tendaAdapter.notifyDataSetChanged()
             }
             .addOnFailureListener { exception ->
-                Log.e("LampuActivity", "Error fetching data: ", exception)
+                Log.e("SepatuActivity", "Error fetching data: ", exception)
             }
     }
 }

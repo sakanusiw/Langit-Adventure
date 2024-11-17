@@ -29,6 +29,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private val dataTenda = ArrayList<ItemsViewModelTenda>()
     private lateinit var tasAdapter: TendaAdapter
     private val dataTas = ArrayList<ItemsViewModelTenda>()
+    private lateinit var LampuAdapter: TendaAdapter
+    private val dataLampu = ArrayList<ItemsViewModelTenda>()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -84,9 +86,16 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         tasAdapter = TendaAdapter(dataTas)
         recyclerViewTas.adapter = tasAdapter
 
+        // RecyclerView untuk Lampu
+        val recyclerViewLampu = view.findViewById<RecyclerView>(R.id.recyclerViewLampu)
+        recyclerViewLampu.layoutManager = GridLayoutManager(requireContext(), 2)
+        LampuAdapter = TendaAdapter(dataLampu)
+        recyclerViewLampu.adapter = LampuAdapter
+
         // Memuat data dari Firestore
         loadDataFromFirestoreForTenda()
         loadDataFromFirestoreForTas()
+        loadDataFromFirestoreForLampu()
     }
 
     private fun loadDataFromFirestoreForTenda() {
@@ -124,6 +133,27 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 // Notifikasi perubahan data di adapter
                 tasAdapter.notifyDataSetChanged()
                 Log.d("HomeFragment", "Total items loaded: ${dataTas.size}")
+            }
+            .addOnFailureListener { exception ->
+                Log.e("HomeFragment", "Error loading data from Firestore", exception)
+                Toast.makeText(requireContext(), "Error loading Tenda data", Toast.LENGTH_SHORT).show() // Feedback untuk pengguna
+            }
+    }
+
+    private fun loadDataFromFirestoreForLampu() {
+        firestore.collection("items") // Nama koleksi Firestore
+            .whereEqualTo("category", "Lampu") // Filter kategori jika diperlukan
+            .get()
+            .addOnSuccessListener { documents ->
+                dataLampu.clear() // Hapus data lama
+                for (document in documents) {
+                    // Konversi data Firestore ke model item Tenda
+                    val item = convertDocumentToItem(document)
+                    dataLampu.add(item)
+                }
+                // Notifikasi perubahan data di adapter
+                LampuAdapter.notifyDataSetChanged()
+                Log.d("HomeFragment", "Total items loaded: ${dataLampu.size}")
             }
             .addOnFailureListener { exception ->
                 Log.e("HomeFragment", "Error loading data from Firestore", exception)

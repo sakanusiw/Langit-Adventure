@@ -8,12 +8,17 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.langitadventure.AlatMasakActivity
 import com.example.langitadventure.BasketFragment
 import com.example.langitadventure.ItemsViewModelCategory
+import com.example.langitadventure.LampuActivity
 import com.example.langitadventure.MainActivity
+import com.example.langitadventure.PakaianActivity
+import com.example.langitadventure.PerlengkapanActivity
 import com.example.langitadventure.ProfileFragment
 import com.example.langitadventure.R
 import com.example.langitadventure.RegisterActivity
+import com.example.langitadventure.SepatuActivity
 import com.example.langitadventure.TasActivity
 import com.example.langitadventure.TendaActivity
 
@@ -46,9 +51,11 @@ class CategoryAdapter(private val mList: List<ItemsViewModelCategory>) : Recycle
             val intent = when (ItemsViewModel.text) {
                 "Tenda" -> Intent(holder.itemView.context, TendaActivity::class.java)
                 "Tas" -> Intent(holder.itemView.context, TasActivity::class.java)
-//                "Lampu" -> Intent(holder.itemView.context, RegisterActivity::class.java)
-//                "Pakaian" -> Intent(holder.itemView.context, PakaianActivity::class.java)
-//                "Perlengkapan" -> Intent(holder.itemView.context, PerlengkapanActivity::class.java)
+                "Lampu" -> Intent(holder.itemView.context, LampuActivity::class.java)
+                "Pakaian" -> Intent(holder.itemView.context, PakaianActivity::class.java)
+                "Sepatu" -> Intent(holder.itemView.context, SepatuActivity::class.java)
+                "Alat Masak" -> Intent(holder.itemView.context, AlatMasakActivity::class.java)
+                "Perlengkapan" -> Intent(holder.itemView.context, PerlengkapanActivity::class.java)
                 else -> Intent(holder.itemView.context, MainActivity::class.java)
             }
             // Mulai aktivitas baru
