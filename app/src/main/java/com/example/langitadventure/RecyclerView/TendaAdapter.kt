@@ -16,7 +16,7 @@ import com.example.langitadventure.TasActivity
 import com.example.langitadventure.TendaActivity
 
 // Adapter untuk barang-barang / item
-class TendaAdapter(private val mList: List<ItemsViewModelTenda>) : RecyclerView.Adapter<TendaAdapter.ViewHolder>() {
+class TendaAdapter(private var mList: List<ItemsViewModelTenda>) : RecyclerView.Adapter<TendaAdapter.ViewHolder>() {
 
     // create new views
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -43,6 +43,7 @@ class TendaAdapter(private val mList: List<ItemsViewModelTenda>) : RecyclerView.
         // sets the text to the textview from our itemHolder class
         holder.textViewNama.text = itemsViewModel.textnama
         holder.textViewHarga.text = itemsViewModel.textharga
+        holder.textViewStok.text = itemsViewModel.stock.toString()
 
         // Menambahkan OnClickListener pada ImageButton
         holder.imageButton.setOnClickListener {
@@ -55,6 +56,7 @@ class TendaAdapter(private val mList: List<ItemsViewModelTenda>) : RecyclerView.
                 putExtra("ITEM_DESCRIPTION", itemsViewModel.description)
                 putExtra("ITEM_AVAILABILITY", itemsViewModel.availability)
                 putExtra("ITEM_BOOKING_COUNT", itemsViewModel.bookingCount)
+                putExtra("ITEM_STOCK", itemsViewModel.stock)
             }
             holder.itemView.context.startActivity(intent)
         }
@@ -65,10 +67,17 @@ class TendaAdapter(private val mList: List<ItemsViewModelTenda>) : RecyclerView.
         return mList.size
     }
 
+    // Fungsi untuk memperbarui data adapter
+    fun updateData(newList: List<ItemsViewModelTenda>) {
+        mList = newList
+        notifyDataSetChanged()
+    }
+
     // Holds the views for adding it to image and text
     class ViewHolder(ItemView: View) : RecyclerView.ViewHolder(ItemView) {
         val imageButton: ImageButton = itemView.findViewById(R.id.imageButtonCardTenda)
         val textViewNama: TextView = itemView.findViewById(R.id.textViewCardTendaNama)
         val textViewHarga: TextView = itemView.findViewById(R.id.textViewCardTendaHarga)
+        val textViewStok: TextView = itemView.findViewById(R.id.textViewCardTendaStok)
     }
 }

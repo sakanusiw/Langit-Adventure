@@ -40,7 +40,7 @@
                 android:gravity="center"
                 android:textSize="20sp"
                 android:fontFamily="@font/sansation_bold"
-                android:text="Alat Masak"
+                android:text="Perlengkapan"
                 android:textColor="@color/black"
                 android:layout_gravity="center"/>
         </FrameLayout>

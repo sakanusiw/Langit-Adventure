@@ -1,11 +1,14 @@
 package com.example.langitadventure
 
 data class ItemsViewModelOrder(
-    val imageResource: Int,  // Resource ID for the image
-    val nama: String,        // Nama item
-    val hargaPerMalam: String,  // Harga per malam
-    val durasi: String,         // Durasi sewa
-    val status: String,         // Status item
-    val jumlah: String,         // Jumlah item
-    val totalBiaya: String      // Total biaya
+    val imageUrl: String = "",
+    val namaBarang: String = "",
+    val hargaPerMalam: Int = 0,
+    val durasi: Int = 0,
+    val jumlahBarang: Int = 0,
+    val totalBiaya: Int = 0,
+    var status: String = "",
+    var timestamp: Long? = null,
+    var startDate: Long? = null,
+    var endDate: Long? = null
 )

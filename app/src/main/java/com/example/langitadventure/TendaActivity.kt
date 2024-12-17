@@ -1,10 +1,8 @@
 package com.example.langitadventure
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.widget.Button
 import android.widget.ImageButton
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -14,7 +12,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.langitadventure.RecyclerView.TendaAdapter
 import com.google.firebase.firestore.FirebaseFirestore
-import com.example.langitadventure.ItemsViewModelTenda
 
 class TendaActivity : AppCompatActivity() {
 
@@ -81,6 +78,7 @@ class TendaActivity : AppCompatActivity() {
                     val bookingCount = document.getLong("booking_count")?.toInt() ?: 0
                     val category = document.getString("category") ?: ""
                     val description = document.getString("description") ?: ""
+                    val stock = document.getLong("stock")?.toInt() ?: 0
 
                     // Log nilai yang diambil untuk debugging
                     Log.d("TendaActivity", "namaBarang: $namaBarang, hargaPerMalam: $hargaPerMalam, gambarBarang: $gambarBarang, availability: $availability, bookingCount: $bookingCount, category: $category, description: $description")
@@ -94,6 +92,7 @@ class TendaActivity : AppCompatActivity() {
                         bookingCount = bookingCount,
                         category = category,
                         description = description,
+                        stock = "Stok: $stock",
                         itemId = document.id // ID dokumen unik
                     )
                     data1.add(item)

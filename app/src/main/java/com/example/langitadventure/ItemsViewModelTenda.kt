@@ -9,5 +9,6 @@ data class ItemsViewModelTenda(
     @get:PropertyName("booking_count") val bookingCount: Int = 0, // Jumlah pemesanan
     @get:PropertyName("category") val category: String = "", // Kategori
     @get:PropertyName("description") val description: String = "", // Deskripsi
+    @get:PropertyName("stock") val stock: String = "", // Stok
     var itemId: String = "" // ID dokumen untuk identifikasi unik
 )

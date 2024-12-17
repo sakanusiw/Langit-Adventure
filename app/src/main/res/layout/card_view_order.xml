@@ -46,15 +46,35 @@
                     android:id="@+id/textViewCardOrderNama"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="20dp"
+                    android:layout_marginBottom="10dp"
                     android:textSize="16sp"
-                    android:fontFamily="@font/sansation_regular"
+                    android:fontFamily="@font/sansation_bold"
+                    android:textColor="@color/black"
                     android:text="Tenda Dome NSM4"/>
+
+                <TextView
+                    android:id="@+id/textViewCardOrderTimestamp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:fontFamily="@font/sansation_regular"
+                    android:textColor="@color/black"
+                    android:text="(TimeStamp)"/>
+
+                <TextView
+                    android:id="@+id/textViewCardOrderTanggal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:textSize="14sp"
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/sansation_regular"
+                    android:text="Tgl Sewa: 01/01/2024 - 03/01/2024"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="15dp"
+                    android:layout_marginBottom="5dp"
                     android:orientation="horizontal">
 
                     <TextView
@@ -63,6 +83,7 @@
                         android:layout_height="wrap_content"
                         android:textSize="16sp"
                         android:fontFamily="@font/sansation_regular"
+                        android:textColor="@color/black"
                         android:text="Rp35.000/Malam"/>
 
                     <FrameLayout
@@ -78,6 +99,7 @@
                             android:layout_gravity="end"
                             android:textSize="16sp"
                             android:fontFamily="@font/sansation_regular"
+                            android:textColor="@color/black"
                             android:text="x2 Malam"/>
                     </FrameLayout>
                 </LinearLayout>
@@ -109,6 +131,7 @@
                             android:layout_gravity="end"
                             android:textSize="16sp"
                             android:fontFamily="@font/sansation_regular"
+                            android:textColor="@color/black"
                             android:text="x1 Barang"/>
                     </FrameLayout>
                 </LinearLayout>
