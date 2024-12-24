@@ -1,11 +1,14 @@
 package com.example.langitadventure
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.ScrollView
 import android.widget.SearchView
 import android.widget.Toast
@@ -34,10 +37,15 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private val dataLampu = ArrayList<ItemsViewModelTenda>()
     private lateinit var PakaianAdapter: TendaAdapter
     private val dataPakaian = ArrayList<ItemsViewModelTenda>()
+    private lateinit var SepatuAdapter: TendaAdapter
+    private val dataSepatu = ArrayList<ItemsViewModelTenda>()
+    private lateinit var AlatMasakAdapter: TendaAdapter
+    private val dataAlatMasak = ArrayList<ItemsViewModelTenda>()
+    private lateinit var PerlengkapanAdapter: TendaAdapter
+    private val dataPerlengkapan = ArrayList<ItemsViewModelTenda>()
 
 //    Adapter untuk fitur Search
     private lateinit var searchAdapter: TendaAdapter
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -106,17 +114,38 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         LampuAdapter = TendaAdapter(dataLampu)
         recyclerViewLampu.adapter = LampuAdapter
 
-        // RecyclerView untuk Lampu
+        // RecyclerView untuk Pakaian
         val recyclerViewPakaian = view.findViewById<RecyclerView>(R.id.recyclerViewPakaian)
         recyclerViewPakaian.layoutManager = GridLayoutManager(requireContext(), 2)
         PakaianAdapter = TendaAdapter(dataPakaian)
         recyclerViewPakaian.adapter = PakaianAdapter
+
+        // RecyclerView untuk Sepatu
+        val recyclerViewSepatu = view.findViewById<RecyclerView>(R.id.recyclerViewSepatu)
+        recyclerViewSepatu.layoutManager = GridLayoutManager(requireContext(), 2)
+        SepatuAdapter = TendaAdapter(dataSepatu)
+        recyclerViewSepatu.adapter = SepatuAdapter
+
+        // RecyclerView untuk Alat Masak
+        val recyclerViewAlatMasak = view.findViewById<RecyclerView>(R.id.recyclerViewAlatMasak)
+        recyclerViewAlatMasak.layoutManager = GridLayoutManager(requireContext(), 2)
+        AlatMasakAdapter = TendaAdapter(dataAlatMasak)
+        recyclerViewAlatMasak.adapter = AlatMasakAdapter
+
+        // RecyclerView untuk Perlengkapan
+        val recyclerViewPerlengkapan = view.findViewById<RecyclerView>(R.id.recyclerViewPerlengkapan)
+        recyclerViewPerlengkapan.layoutManager = GridLayoutManager(requireContext(), 2)
+        PerlengkapanAdapter = TendaAdapter(dataPerlengkapan)
+        recyclerViewPerlengkapan.adapter = PerlengkapanAdapter
 
         // Memuat data dari Firestore
         loadDataFromFirestoreForTenda()
         loadDataFromFirestoreForTas()
         loadDataFromFirestoreForLampu()
         loadDataFromFirestoreForPakaian()
+        loadDataFromFirestoreForSepatu()
+        loadDataFromFirestoreForAlatMasak()
+        loadDataFromFirestoreForPerlengkapan()
 
         // Tambahkan listener untuk SearchView
         val searchView = view.findViewById<SearchView>(R.id.searchViewCariBarang)
@@ -139,13 +168,21 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         })
         // Memuat semua data saat pertama kali membuka fragment
         loadAllData()
+
+        // Menghubungkan ImageButton dengan ID
+        val imageButtonChat: ImageButton = view.findViewById(R.id.imageButtonChat)
+
+        // Menambahkan listener untuk menangani klik pada ImageButton
+        imageButtonChat.setOnClickListener {
+            openWhatsApp()
+        }
     }
 
     // Fungsi untuk mencari item berdasarkan nama
 // Fungsi pencarian
     private fun performSearch(query: String, view: View) {
         // Gabungkan semua data dari kategori
-        val allData = dataTenda + dataTas + dataLampu + dataPakaian
+        val allData = dataTenda + dataTas + dataLampu + dataPakaian + dataSepatu + dataAlatMasak + dataPerlengkapan
 
         // Filter data berdasarkan nama barang
         val filteredList = allData.filter { item ->
@@ -182,11 +219,31 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         searchAdapter.updateData(emptyList())
     }
 
+    // Fungsi untuk membuka WhatsApp dengan nomor yang sudah ditentukan
+    private fun openWhatsApp() {
+        val phoneNumber = "62895377364088" // Ganti dengan nomor WhatsApp tujuan (format internasional tanpa tanda +)
+        val url = "https://wa.me/$phoneNumber" // URL untuk membuka chat WhatsApp
+
+        try {
+            // Membuat intent untuk membuka WhatsApp
+            val intent = Intent(Intent.ACTION_VIEW)
+            intent.data = Uri.parse(url)
+            startActivity(intent)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            // Menangani error jika WhatsApp tidak terpasang di perangkat
+        }
+    }
+
     // Fungsi untuk memuat ulang data
     private fun loadAllData() {
         loadDataFromFirestoreForTenda()
         loadDataFromFirestoreForTas()
         loadDataFromFirestoreForLampu()
+        loadDataFromFirestoreForPakaian()
+        loadDataFromFirestoreForSepatu()
+        loadDataFromFirestoreForAlatMasak()
+        loadDataFromFirestoreForPerlengkapan()
     }
 
     private fun loadDataFromFirestoreForTenda() {
@@ -270,6 +327,69 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             .addOnFailureListener { exception ->
                 Log.e("HomeFragment", "Error loading data from Firestore", exception)
                 Toast.makeText(requireContext(), "Error loading Pakaian data", Toast.LENGTH_SHORT).show() // Feedback untuk pengguna
+            }
+    }
+
+    private fun loadDataFromFirestoreForSepatu() {
+        firestore.collection("items") // Nama koleksi Firestore
+            .whereEqualTo("category", "Sepatu") // Filter kategori jika diperlukan
+            .get()
+            .addOnSuccessListener { documents ->
+                dataSepatu.clear() // Hapus data lama
+                for (document in documents) {
+                    // Konversi data Firestore ke model item Tenda
+                    val item = convertDocumentToItem(document)
+                    dataSepatu.add(item)
+                }
+                // Notifikasi perubahan data di adapter
+                SepatuAdapter.notifyDataSetChanged()
+                Log.d("HomeFragment", "Total items loaded: ${dataSepatu.size}")
+            }
+            .addOnFailureListener { exception ->
+                Log.e("HomeFragment", "Error loading data from Firestore", exception)
+                Toast.makeText(requireContext(), "Error loading Sepatu data", Toast.LENGTH_SHORT).show() // Feedback untuk pengguna
+            }
+    }
+
+    private fun loadDataFromFirestoreForAlatMasak() {
+        firestore.collection("items") // Nama koleksi Firestore
+            .whereEqualTo("category", "Alat Masak") // Filter kategori jika diperlukan
+            .get()
+            .addOnSuccessListener { documents ->
+                dataAlatMasak.clear() // Hapus data lama
+                for (document in documents) {
+                    // Konversi data Firestore ke model item Tenda
+                    val item = convertDocumentToItem(document)
+                    dataAlatMasak.add(item)
+                }
+                // Notifikasi perubahan data di adapter
+                AlatMasakAdapter.notifyDataSetChanged()
+                Log.d("HomeFragment", "Total items loaded: ${dataAlatMasak.size}")
+            }
+            .addOnFailureListener { exception ->
+                Log.e("HomeFragment", "Error loading data from Firestore", exception)
+                Toast.makeText(requireContext(), "Error loading Alat Masak data", Toast.LENGTH_SHORT).show() // Feedback untuk pengguna
+            }
+    }
+
+    private fun loadDataFromFirestoreForPerlengkapan() {
+        firestore.collection("items") // Nama koleksi Firestore
+            .whereEqualTo("category", "Perlengkapan") // Filter kategori jika diperlukan
+            .get()
+            .addOnSuccessListener { documents ->
+                dataPerlengkapan.clear() // Hapus data lama
+                for (document in documents) {
+                    // Konversi data Firestore ke model item Tenda
+                    val item = convertDocumentToItem(document)
+                    dataPerlengkapan.add(item)
+                }
+                // Notifikasi perubahan data di adapter
+                PerlengkapanAdapter.notifyDataSetChanged()
+                Log.d("HomeFragment", "Total items loaded: ${dataPerlengkapan.size}")
+            }
+            .addOnFailureListener { exception ->
+                Log.e("HomeFragment", "Error loading data from Firestore", exception)
+                Toast.makeText(requireContext(), "Error loading Alat Masak data", Toast.LENGTH_SHORT).show() // Feedback untuk pengguna
             }
     }
 

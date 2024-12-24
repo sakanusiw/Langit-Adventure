@@ -242,7 +242,7 @@ class DetailActivity : AppCompatActivity() {
                     val daysBetween = TimeUnit.MILLISECONDS.toDays(endDate!! - (startDate ?: 0))
 
                     if (startDate == null) {
-                        Toast.makeText(this, "Pilih tanggal mulai terlebih dahulu", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "Pilih tanggal sewa terlebih dahulu", Toast.LENGTH_SHORT).show()
                     } else if (daysBetween in 1..7) {
                         textView.text = "Tanggal kembali: $selectedDate"
                     } else {

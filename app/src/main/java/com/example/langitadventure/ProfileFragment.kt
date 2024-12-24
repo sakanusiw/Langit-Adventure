@@ -1,6 +1,7 @@
 package com.example.langitadventure
 
 import android.content.ContentValues.TAG
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -13,6 +14,7 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.widget.SwitchCompat
 import com.bumptech.glide.Glide
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
@@ -32,6 +34,7 @@ class ProfileFragment : Fragment() {
 
     private lateinit var db: FirebaseFirestore
     private lateinit var auth: FirebaseAuth
+    private lateinit var notificationSwitch: SwitchCompat
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,6 +50,15 @@ class ProfileFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_profile, container, false)
+
+        notificationSwitch = view.findViewById(R.id.notificationSwitch)
+        val sharedPreferences = requireActivity().getSharedPreferences("Settings", Context.MODE_PRIVATE)
+        notificationSwitch.isChecked = sharedPreferences.getBoolean("notifications_enabled", false)
+
+        notificationSwitch.setOnCheckedChangeListener { _, isChecked ->
+            sharedPreferences.edit().putBoolean("notifications_enabled", isChecked).apply()
+            Toast.makeText(requireContext(), if (isChecked) "Notifikasi diaktifkan" else "Notifikasi dinonaktifkan", Toast.LENGTH_SHORT).show()
+        }
 
         auth = FirebaseAuth.getInstance()
         if (auth.currentUser == null) {

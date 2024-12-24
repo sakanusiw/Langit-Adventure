@@ -22,8 +22,6 @@ class PaymentSentActivity : AppCompatActivity() {
 
         val buttonClick = findViewById<Button>(R.id.buttonPaymentSentLanjut)
         buttonClick.setOnClickListener {
-//            supportFragmentManager.beginTransaction()
-//                .replace(com.google.android.material.R.id.container, OrderFragment()).commit()
             val intent = Intent(this, OrderActivity::class.java)
             startActivity(intent)
         }

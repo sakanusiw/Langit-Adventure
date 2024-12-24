@@ -70,6 +70,7 @@ class AlatMasakActivity : AppCompatActivity() {
                     val bookingCount = document.getLong("booking_count")?.toInt() ?: 0
                     val category = document.getString("category") ?: ""
                     val description = document.getString("description") ?: ""
+                    val stock = document.getLong("stock")?.toInt() ?: 0
 
                     // Log nilai yang diambil untuk debugging
                     Log.d("AlatMasakActivity", "namaBarang: $namaBarang, hargaPerMalam: $hargaPerMalam, gambarBarang: $gambarBarang, availability: $availability, bookingCount: $bookingCount, category: $category, description: $description")
@@ -83,6 +84,7 @@ class AlatMasakActivity : AppCompatActivity() {
                         bookingCount = bookingCount,
                         category = category,
                         description = description,
+                        stock = "Stok: $stock",
                         itemId = document.id // ID dokumen unik
                     )
                     data1.add(item)

@@ -96,5 +96,11 @@ class LoginActivity : AppCompatActivity() {
             val intent = Intent(this, HomeActivity::class.java)
             startActivity(intent)
         }
+
+        val textViewLupaSandi = findViewById<TextView>(R.id.textViewLupaSandi)
+        textViewLupaSandi.setOnClickListener {
+            val intent = Intent(this, ResetPasswordActivity::class.java)
+            startActivity(intent)
+        }
     }
 }
