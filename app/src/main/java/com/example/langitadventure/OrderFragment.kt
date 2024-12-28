@@ -100,7 +100,7 @@ class OrderFragment : Fragment() {
         ordersList.clear()
 
         firestore.collection("users").document(currentUser.uid).collection("orders")
-            .orderBy("timestamp")
+            .orderBy("timestamp", com.google.firebase.firestore.Query.Direction.DESCENDING) //Mengurutkan TimeStamp dari yang terbaru ke yang terlama
             .get()
             .addOnSuccessListener { querySnapshot ->
                 querySnapshot.documents.forEach { document ->

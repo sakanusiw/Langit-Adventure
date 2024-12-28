@@ -55,29 +55,46 @@ class BasketAdapter(
                     .document(cartDocumentId)
                     .delete()
                     .addOnSuccessListener {
-                        onItemRemoved(item.totalPrice)
+                        // Update the UI and notify listener of the removed item
                         mList.removeAt(position)
                         notifyItemRemoved(position)
+                        // Update total price after item removal (if required)
+                        onItemRemoved(item.totalPrice)
+                        // Notify adapter if necessary to refresh
+                        notifyItemRangeChanged(position, mList.size)
                     }
                     .addOnFailureListener { e ->
-                        Log.e("BasketAdapter", "Gagal menghapus item: $cartDocumentId", e)
+                        Log.e("BasketAdapter", "Failed to delete item: $cartDocumentId", e)
                     }
             } else {
-                Log.e("BasketAdapter", "cartDocumentId kosong untuk item: ${item.itemId}")
+                Log.e("BasketAdapter", "cartDocumentId is empty for item: ${item.itemId}")
             }
         }
 
-        // Plus button
+        // Plus button (Adding quantity)
         holder.plusButton.setOnClickListener {
-            if (item.quantity < 10) { // Batasi maksimal 10
-                item.quantity++
-                updateItemQuantity(item, holder)
-            }
+            // Check stock from Firestore
+            db.collection("items").document(item.itemId)
+                .get()
+                .addOnSuccessListener { document ->
+                    val stock = document.getLong("stock")?.toInt() ?: 0
+                    val maxQuantity = minOf(10, stock)
+                    if (item.quantity < maxQuantity) {
+                        item.quantity++
+                        updateItemQuantity(item, holder)
+                    } else {
+                        // Show a message or disable button if stock is exceeded
+                        Log.d("BasketAdapter", "Not enough stock. Available stock: $stock")
+                    }
+                }
+                .addOnFailureListener { e ->
+                    Log.e("BasketAdapter", "Error fetching stock", e)
+                }
         }
 
-        // Minus button
+        // Minus button (Decreasing quantity)
         holder.minusButton.setOnClickListener {
-            if (item.quantity > 1) { // Batasi minimal 1
+            if (item.quantity > 1) { // Limit quantity to a min of 1
                 item.quantity--
                 updateItemQuantity(item, holder)
             }
@@ -85,20 +102,20 @@ class BasketAdapter(
     }
 
     private fun updateItemQuantity(item: ItemsViewModelBasket, holder: ViewHolder) {
-        // Perbarui jumlah kuantitas dan total harga item
+        // Update total price based on new quantity
         item.totalPrice = item.pricePerNight * item.quantity * item.duration
         holder.quantity.text = item.quantity.toString()
         holder.totalPrice.text = "Rp${item.totalPrice}"
 
-        // Simpan pembaruan kuantitas dan total harga ke Firestore
+        // Update quantity and total price in Firestore
         db.collection("users").document(auth.currentUser!!.uid).collection("cart")
             .document(item.cartDocumentId)
             .update("quantity", item.quantity, "totalPrice", item.totalPrice)
             .addOnSuccessListener {
-                onQuantityChanged(item.totalPrice) // Perbarui total harga secara keseluruhan
+                onQuantityChanged(item.totalPrice) // Update overall total price
             }
             .addOnFailureListener { e ->
-                Log.e("BasketAdapter", "Gagal memperbarui kuantitas item: ${item.cartDocumentId}", e)
+                Log.e("BasketAdapter", "Failed to update item quantity: ${item.cartDocumentId}", e)
             }
     }
 
@@ -115,7 +132,7 @@ class BasketAdapter(
         val quantity: TextView = itemView.findViewById(R.id.textViewCardKeranjangJumlah)
         val totalPrice: TextView = itemView.findViewById(R.id.textViewCardKeranjangTotalHarga)
         val deleteButton: ImageButton = itemView.findViewById(R.id.imageButtonCardKeranjangDelete)
-        val plusButton: ImageButton = itemView.findViewById(R.id.imageButtonCardKeranjangPlus) // Tombol tambah kuantitas
-        val minusButton: ImageButton = itemView.findViewById(R.id.imageButtonCardKeranjangMinus) // Tombol kurangi kuantitas
+        val plusButton: ImageButton = itemView.findViewById(R.id.imageButtonCardKeranjangPlus) // Add quantity button
+        val minusButton: ImageButton = itemView.findViewById(R.id.imageButtonCardKeranjangMinus) // Subtract quantity button
     }
 }

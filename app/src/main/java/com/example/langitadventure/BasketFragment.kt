@@ -56,7 +56,9 @@ class BasketFragment : Fragment() {
         buttonBayar.setOnClickListener {
             val currentUser = auth.currentUser
             val intent = if (currentUser != null) {
-                Intent(requireActivity(), PaymentActivity::class.java)
+                Intent(requireActivity(), PaymentActivity::class.java).apply{
+                    putExtra("TOTAL_PRICE", itemsList.sumOf { it.totalPrice })
+                }
             } else {
                 Intent(requireActivity(), LoginActivity::class.java)
             }

@@ -177,6 +177,7 @@ class DetailActivity : AppCompatActivity() {
                     val itemPricePerNight = document.getDouble("price_per_night")?.toInt() // Ensure the field name matches your Firestore data
                     val itemImage = document.getString("image_url")
                     val itemAvailable = document.getBoolean("availability") ?: false
+                    val itemStock = document.getLong("stock")?.toInt() ?: 0
 
                     // Tampilkan data di UI
                     findViewById<TextView>(R.id.textViewDetailKategori).text = itemCategory ?: "Kategori tidak tersedia"
@@ -201,7 +202,7 @@ class DetailActivity : AppCompatActivity() {
 
                     // Kondisi untuk tombol keranjang berdasarkan ketersediaan
                     val buttonDetailTambahKeranjang: Button = findViewById(R.id.buttonDetailTambahKeranjang)
-                    if (!itemAvailable) {
+                    if (!itemAvailable || itemStock == 0) {
                         buttonDetailTambahKeranjang.text = "Stok Kosong"
                         buttonDetailTambahKeranjang.isEnabled = false
                     } else {
