@@ -225,6 +225,10 @@ class DetailActivity : AppCompatActivity() {
         val month = calendar.get(Calendar.MONTH)
         val day = calendar.get(Calendar.DAY_OF_MONTH)
 
+        // Tentukan batas maksimal tanggal
+        val maxCalendar = Calendar.getInstance()
+        maxCalendar.add(Calendar.DAY_OF_MONTH, 10)
+
         val datePickerDialog = DatePickerDialog(
             this,
             { _, selectedYear, selectedMonth, selectedDay ->
@@ -263,6 +267,9 @@ class DetailActivity : AppCompatActivity() {
         } else {
             startDate ?: calendar.timeInMillis
         }
+
+//        datePickerDialog.datePicker.minDate = calendar.timeInMillis // Minimal hari ini
+        datePickerDialog.datePicker.maxDate = maxCalendar.timeInMillis // Maksimal 10 hari dari sekarang
 
         datePickerDialog.show()
     }
